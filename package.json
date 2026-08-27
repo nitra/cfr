@@ -1,5 +1,5 @@
 {
-  "name": "@nitra/check-flux-resources",
+  "name": "@nitra/cfr",
   "version": "0.1.0",
   "description": "Verify that every YAML file in a Kustomize directory is listed in kustomization.yaml's explicit resources: (and vice versa) — catches files Flux silently ignores.",
   "keywords": [
@@ -10,11 +10,11 @@
     "gitops",
     "lint"
   ],
-  "homepage": "https://github.com/nitra/check-flux-resources#readme",
-  "bugs": "https://github.com/nitra/check-flux-resources/issues",
+  "homepage": "https://github.com/nitra/cfr#readme",
+  "bugs": "https://github.com/nitra/cfr/issues",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nitra/check-flux-resources.git"
+    "url": "git+https://github.com/nitra/cfr.git"
   },
   "license": "MIT",
   "author": "Nitra <info@nitralabs.com> (https://nitra.ai)",
@@ -23,7 +23,7 @@
     "node": ">=18"
   },
   "bin": {
-    "check-flux-resources": "./bin/cli.mjs"
+    "cfr": "./bin/cli.mjs"
   },
   "files": [
     "bin"

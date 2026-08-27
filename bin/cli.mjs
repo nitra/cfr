@@ -7,10 +7,10 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 
-const HELP = `check-flux-resources — verify kustomization.yaml resources: match the directory
+const HELP = `cfr (@nitra/cfr) — verify kustomization.yaml resources: match the directory
 
 Usage:
-  npx @nitra/check-flux-resources [dir-or-kustomization.yaml ...]
+  npx @nitra/cfr [dir-or-kustomization.yaml ...]
 
 Each argument is either a directory containing a kustomization.yaml (or
 kustomization.yml), or a direct path to one. Defaults to "." when no

@@ -1,4 +1,4 @@
-# @nitra/check-flux-resources
+# @nitra/cfr
 
 Kustomize's `resources:` field is an **explicit list**, not a glob. Add a
 YAML manifest to a directory managed by a [Flux](https://fluxcd.io)
@@ -13,14 +13,14 @@ This CLI catches that drift before it ships: it compares every
 ## Usage
 
 ```sh
-npx @nitra/check-flux-resources [dir-or-kustomization.yaml ...]
+npx @nitra/cfr [dir-or-kustomization.yaml ...]
 ```
 
 No arguments checks `.`. Point it at one or more directories (or direct
 paths to a `kustomization.yaml`/`kustomization.yml`):
 
 ```sh
-npx @nitra/check-flux-resources flux/clusters/production
+npx @nitra/cfr flux/clusters/production
 ```
 
 ```
@@ -34,7 +34,7 @@ on any path that touches a Kustomize directory with an explicit
 `resources:` list:
 
 ```yaml
-# .github/workflows/check-flux-resources.yml
+# .github/workflows/cfr.yml
 on:
   push:
     paths: ['flux/clusters/production/**']
@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - run: npx @nitra/check-flux-resources flux/clusters/production
+      - run: npx @nitra/cfr flux/clusters/production
 ```
 
 ## What it checks
