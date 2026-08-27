@@ -1,0 +1,63 @@
+.github/workflows/publish.yml
+  s_4b7468b5c30dd3::t_65eba7f6892e59 1-39
+.github/workflows/test.yml
+  s_4b7468b5c30dd3::t_8eef29d06fb31e 1-31
+.gitignore
+  s_4b7468b5c30dd3::t_9f94506a40d704 1
+LICENSE
+  s_6d0e9840d83ac7::t_cdc55c560c1051 1-21
+bin/cli.mjs
+  s_6d0e9840d83ac7::t_32232063e3452f 1-137
+package.json
+  s_6d0e9840d83ac7::t_bfd4ccfa0aa1b3 1-37
+test/cli.test.mjs
+  s_6d0e9840d83ac7::t_61f2844749511f 1-47
+test/fixtures/dangling/a.yaml
+  s_1aed8f3bf99831::t_8bedab6d9610b8 1
+test/fixtures/dangling/kustomization.yaml
+  s_1aed8f3bf99831::t_89451ce1b0d7e3 1-6
+test/fixtures/missing/a.yaml
+  s_1aed8f3bf99831::t_55aa4d0409b06d 1
+test/fixtures/missing/b.yaml
+  s_1aed8f3bf99831::t_9cded41868f2bf 1
+test/fixtures/missing/kustomization.yaml
+  s_1aed8f3bf99831::t_0ef04b142d7598 1-5
+test/fixtures/ok/a.yaml
+  s_1aed8f3bf99831::t_20baff13527c07 1
+test/fixtures/ok/b.yaml
+  s_1aed8f3bf99831::t_607853357efb4d 1
+test/fixtures/ok/kustomization.yaml
+  s_1aed8f3bf99831::t_ee8bb9f002e39b 1-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "20e9f03d65654d16c18c581f0f7bed8c2316a260",
+  "prompts": {},
+  "sessions": {
+    "s_1aed8f3bf99831": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "34298aa6-7541-4035-b5e2-6be087132705",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "vitaliytv <v@nitra.ai>"
+    },
+    "s_4b7468b5c30dd3": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a037a6-b96e-74d2-ac3e-cea73dffd115",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "vitaliytv <v@nitra.ai>"
+    },
+    "s_6d0e9840d83ac7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f8b64435-0744-4c84-bca5-b6c751ca8746",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "vitaliytv <v@nitra.ai>"
+    }
+  }
+}
