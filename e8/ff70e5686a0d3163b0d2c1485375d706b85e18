@@ -1,0 +1,19 @@
+.github/workflows/npm-publish.yml
+  s_1aed8f3bf99831::t_5ad737eb89925c 15-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "e8ff70e5686a0d3163b0d2c1485375d706b85e18",
+  "prompts": {},
+  "sessions": {
+    "s_1aed8f3bf99831": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "34298aa6-7541-4035-b5e2-6be087132705",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "vitaliytv <v@nitra.ai>"
+    }
+  }
+}
