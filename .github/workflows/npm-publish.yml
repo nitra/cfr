@@ -12,12 +12,18 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    # id-token: write — required for npm Trusted Publishing (OIDC). No
+    # NPM_TOKEN secret: npm exchanges this workflow's OIDC token for a
+    # short-lived publish credential and attaches provenance automatically.
+    # Configured on npmjs.com under @nitra/cfr → Settings → Trusted Publisher
+    # (publisher: GitHub Actions, org/repo: nitra/cfr, workflow: this file).
     permissions:
       contents: read
       id-token: write
     steps:
       - uses: actions/checkout@v4
 
+      # npm Trusted Publishing requires npm >= 11.5.1 and Node >= 22.14.0.
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -34,6 +40,4 @@ jobs:
             exit 1
           fi
 
-      - run: npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --access public
