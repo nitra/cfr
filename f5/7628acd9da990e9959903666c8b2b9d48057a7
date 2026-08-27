@@ -1,0 +1,23 @@
+package.json
+  s_1aed8f3bf99831::t_af9cc71c48bc3e 2,13-14,17,26
+README.md
+  s_1aed8f3bf99831::t_c16df8067ac16c 1,16,23,37,47
+bin/cli.mjs
+  s_1aed8f3bf99831::t_3b6bbf22de6932 10,13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "f57628acd9da990e9959903666c8b2b9d48057a7",
+  "prompts": {},
+  "sessions": {
+    "s_1aed8f3bf99831": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "34298aa6-7541-4035-b5e2-6be087132705",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "vitaliytv <v@nitra.ai>"
+    }
+  }
+}
