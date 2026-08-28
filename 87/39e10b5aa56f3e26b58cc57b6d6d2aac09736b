@@ -1,0 +1,21 @@
+.github/workflows/test.yml
+  s_5eed5f35a8cbe4::t_c3c19746e2bf2a 27-29
+.github/workflows/npm-publish.yml
+  s_5eed5f35a8cbe4::t_5ff22c9aa695e1 40-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "8739e10b5aa56f3e26b58cc57b6d6d2aac09736b",
+  "prompts": {},
+  "sessions": {
+    "s_5eed5f35a8cbe4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2d90b302-72b5-4ee2-9174-88208616d1a0",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "vitaliytv <v@nitra.ai>"
+    }
+  }
+}
