@@ -191,7 +191,7 @@ only, `--include-system` to see GCP-managed noise.
 
 ## Changelog
 
-See [CHANGELOG.md](./CHANGELOG.md).
+See [CHANGELOG.md](https://github.com/nitra/cfr/blob/main/CHANGELOG.md).
 
 ## License
 
