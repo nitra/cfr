@@ -1,0 +1,32 @@
+lib/get-resources.mjs
+  s_5eed5f35a8cbe4::t_324f18974251f0 1-406
+  s_5eed5f35a8cbe4::t_ad5f537867fc01 407-513
+package.json
+  s_5eed5f35a8cbe4::t_c4dbab664ccccc 3-4
+lib/kcc-inventory.mjs
+  s_5eed5f35a8cbe4::t_654da07ee1cd73 1,5,96
+test/cli.test.mjs
+  s_5eed5f35a8cbe4::t_6dd8e6394ae07c 59,64,78-86,89
+  s_5eed5f35a8cbe4::t_8222b3ab61058d 87-88
+README.md
+  s_5eed5f35a8cbe4::t_40cfdf665b8c1b 4,10-11
+  s_5eed5f35a8cbe4::t_f01bf024d2bfc5 151-184
+bin/cli.mjs
+  s_5eed5f35a8cbe4::t_be4c4818e49c62 4,16,24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "ae6ea859dd820d4605cf4271ed020294158c2c43",
+  "prompts": {},
+  "sessions": {
+    "s_5eed5f35a8cbe4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2d90b302-72b5-4ee2-9174-88208616d1a0",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "vitaliytv <v@nitra.ai>"
+    }
+  }
+}
