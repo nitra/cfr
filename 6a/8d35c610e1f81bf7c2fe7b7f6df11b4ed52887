@@ -1,0 +1,21 @@
+lib/kcc-inventory.mjs
+  s_5eed5f35a8cbe4::t_1f37c7ed8a92b9 1-5,44,74-78,80,82,85-87,90,92-102,104-105,107-111,113,115-122,142
+lib/kcc-resources.mjs
+  s_5eed5f35a8cbe4::t_675f18e6f70362 1-375
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "6a8d35c610e1f81bf7c2fe7b7f6df11b4ed52887",
+  "prompts": {},
+  "sessions": {
+    "s_5eed5f35a8cbe4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2d90b302-72b5-4ee2-9174-88208616d1a0",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "vitaliytv <v@nitra.ai>"
+    }
+  }
+}
