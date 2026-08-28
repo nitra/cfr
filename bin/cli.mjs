@@ -21,7 +21,10 @@ const COMMANDS = {
   'kcc-inventory': runKccInventory,
 };
 
-function main(argv) {
+// check is synchronous (local filesystem only); kcc-inventory is async
+// (talks to GCP/kubectl over the network) — awaiting a plain number is a
+// no-op, so this works for either.
+async function main(argv) {
   if (argv[0] === '-h' || argv[0] === '--help') {
     process.stdout.write(TOP_HELP);
     return 0;
@@ -36,4 +39,10 @@ function main(argv) {
   return command(rest);
 }
 
-process.exit(main(process.argv.slice(2)));
+main(process.argv.slice(2)).then(
+  (code) => process.exit(code),
+  (err) => {
+    console.error(`✗ ${err.message || err}`);
+    process.exit(1);
+  },
+);

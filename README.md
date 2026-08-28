@@ -115,9 +115,15 @@ npx @nitra/cfr kcc-inventory <namespace|--all> --include-system  # don't filter 
   чисто (11 live, 11 kcc)
 ```
 
-Requires `gcloud` and `kubectl` on `PATH`, authenticated against the
-target project/cluster. Set `KUBE_CONTEXT` to target a specific
-kubeconfig context explicitly instead of relying on the current one.
+Requires `kubectl` on `PATH`, pointed at the target cluster. Set
+`KUBE_CONTEXT` to target a specific kubeconfig context explicitly instead
+of relying on the current one. The GCP side talks to Cloud Asset
+Inventory, IAM, and Compute Engine directly over REST — no `gcloud` CLI
+needed, just [Application Default
+Credentials](https://cloud.google.com/docs/authentication/application-default-credentials)
+(`gcloud auth application-default login` locally, a service account key
+via `GOOGLE_APPLICATION_CREDENTIALS`, or the ambient credentials on
+GCE/GKE/Cloud Build).
 
 By default, GCP-managed system noise is filtered out — Google-owned
 service accounts, `gcr.io` shims, GKE-managed node pools and DNS zones,
@@ -132,13 +138,13 @@ legacy bucket ACL entries. Pass `--include-system` to see it anyway.
 
 ### A known Cloud Asset Inventory quirk
 
-`kcc-inventory` uses `gcloud asset search-all-resources` /
-`search-all-iam-policies` — one or two calls per project instead of a
-`gcloud X list` per resource kind. That index can lag: it has been
-observed returning `DNSRecordSet` and `ComputeAddress` entries for
-resources already deleted in GCP. Both are cross-checked against a direct,
-cheap `gcloud` call before being reported, and any stale entry found this
-way is counted and noted separately — never silently folded into DRIFT.
+`kcc-inventory` calls `searchAllResources`/`searchAllIamPolicies` on the
+Cloud Asset API — one or two paginated calls per project instead of a
+list call per resource kind. That index can lag: it has been observed
+returning `DNSRecordSet` and `ComputeAddress` entries for resources
+already deleted in GCP. Both are cross-checked against a direct Compute
+Engine call before being reported, and any stale entry found this way is
+counted and noted separately — never silently folded into DRIFT.
 
 ## License
 
