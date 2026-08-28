@@ -1,6 +1,6 @@
 {
   "name": "@nitra/cfr",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Verify that every YAML file in a Kustomize directory is listed in kustomization.yaml's explicit resources: (and vice versa) — catches files Flux silently ignores.",
   "keywords": [
     "kustomize",
