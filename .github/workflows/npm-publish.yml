@@ -37,6 +37,8 @@ jobs:
 
       - run: npm install -g npm@latest
 
+      - run: npm ci
+
       - run: node --test test/cli.test.mjs
 
       - name: Verify tag matches package.json version
