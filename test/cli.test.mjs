@@ -56,11 +56,12 @@ test('"check" subcommand behaves the same as the bare default', () => {
   assert.match(stdout, /^✓ /);
 });
 
-test('top-level --help lists both commands', () => {
+test('top-level --help lists all three commands', () => {
   const { code, stdout } = runArgs('--help');
   assert.equal(code, 0);
   assert.match(stdout, /check/);
   assert.match(stdout, /kcc-inventory/);
+  assert.match(stdout, /get-resources/);
 });
 
 test('"kcc-inventory --help" shows its own usage without touching gcloud/kubectl', () => {
@@ -71,6 +72,18 @@ test('"kcc-inventory --help" shows its own usage without touching gcloud/kubectl
 
 test('"kcc-inventory" with no target exits 2 with a usage error', () => {
   const { code, stderr } = runArgs('kcc-inventory');
+  assert.equal(code, 2);
+  assert.match(stderr, /usage:/);
+});
+
+test('"get-resources --help" shows its own usage without touching gcloud/kubectl', () => {
+  const { code, stdout } = runArgs('get-resources', '--help');
+  assert.equal(code, 0);
+  assert.match(stdout, /get-resources <namespace>/);
+});
+
+test('"get-resources" with no target exits 2 with a usage error', () => {
+  const { code, stderr } = runArgs('get-resources');
   assert.equal(code, 2);
   assert.match(stderr, /usage:/);
 });

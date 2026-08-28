@@ -1,12 +1,14 @@
 # @nitra/cfr
 
 A handful of small k8s/GitOps CLI utilities, one `npx`/`bunx` away — no
-install, no dependencies. Two commands so far:
+install. Three commands so far:
 
 - **`check`** (default) — verify a Kustomize directory's `resources:` list
   matches what's actually on disk
 - **`kcc-inventory`** — diff a GCP Config Connector namespace against the
   live project to find drift
+- **`get-resources`** — the raw resource list `kcc-inventory` diffs,
+  without the diff
 
 ## `check`
 
@@ -145,6 +147,40 @@ returning `DNSRecordSet` and `ComputeAddress` entries for resources
 already deleted in GCP. Both are cross-checked against a direct Compute
 Engine call before being reported, and any stale entry found this way is
 counted and noted separately — never silently folded into DRIFT.
+
+## `get-resources`
+
+`kcc-inventory` is a diff on top of a fact-finding step: for each KCC
+namespace, list what's live in GCP and what's declared under KCC. That
+step is `get-resources` — same scan, same filtering, no drift/orphan
+comparison. Useful on its own for piping into `jq`, feeding a different
+tool, or just seeing everything a namespace touches without wading
+through a diff.
+
+### Usage
+
+```sh
+npx @nitra/cfr get-resources <namespace>
+npx @nitra/cfr get-resources --all
+npx @nitra/cfr get-resources <namespace|--all> --json
+npx @nitra/cfr get-resources <namespace|--all> --include-system
+```
+
+```
+### namespace nitraai -> проєкт nitraai ###
+== StorageBucket ==
+  gcp: 7n-forgejo-lfs
+  gcp: old-backups-bucket
+  kcc: 7n-forgejo-lfs
+```
+
+`--json` emits `{resources: [{namespace, project, kind, id, source}, ...],
+diagnostics: [...]}` — `source` is `"gcp"` or `"kcc"`, `diagnostics`
+carries the same stale-cache/GKE-managed notes described above.
+
+Same requirements as `kcc-inventory`: `kubectl` on `PATH`, Application
+Default Credentials for the GCP side, `--include-system` to see
+GCP-managed noise.
 
 ## License
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { run as runCheck } from '../lib/check.mjs';
 import { run as runKccInventory } from '../lib/kcc-inventory.mjs';
+import { run as runGetResources } from '../lib/get-resources.mjs';
 
 const TOP_HELP = `cfr (@nitra/cfr) — a handful of small k8s/GitOps CLI utilities
 
@@ -12,6 +13,7 @@ Commands:
   check           Verify kustomization.yaml resources: match the directory
                   (default when the first argument isn't a known command)
   kcc-inventory   GCP Config Connector (KCC) drift inventory
+  get-resources   Raw KCC/GCP resource list behind kcc-inventory, no diff
 
 Run "npx @nitra/cfr <command> --help" for command-specific help.
 `;
@@ -19,6 +21,7 @@ Run "npx @nitra/cfr <command> --help" for command-specific help.
 const COMMANDS = {
   check: runCheck,
   'kcc-inventory': runKccInventory,
+  'get-resources': runGetResources,
 };
 
 // check is synchronous (local filesystem only); kcc-inventory is async
