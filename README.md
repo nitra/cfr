@@ -189,6 +189,10 @@ carries the same stale-cache/GKE-managed notes described above.
 Same requirements as `kcc-inventory` — no `gcloud`/`kubectl` needed, GKE
 only, `--include-system` to see GCP-managed noise.
 
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md).
+
 ## License
 
 MIT
