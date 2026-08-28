@@ -1,0 +1,60 @@
+package.json
+  s_5eed5f35a8cbe4::t_b0b6e8f9a3f49c 42-43
+  s_5eed5f35a8cbe4::t_49e4aafab2e939 3
+lib/gcp-rest.mjs
+  s_5eed5f35a8cbe4::t_995b9dcd4a6073 20-30
+  s_5eed5f35a8cbe4::t_4e8c3d47b501b8 19
+lib/get-resources.mjs
+  s_5eed5f35a8cbe4::t_927e1a4cbc048f 311-312
+  s_5eed5f35a8cbe4::t_36c575f618d9d3 245-246
+  s_5eed5f35a8cbe4::t_9f2f3c9c56768b 294-295
+  s_5eed5f35a8cbe4::t_b03fc7d7110d87 372-379
+  s_5eed5f35a8cbe4::t_9a2f203aaa508b 4-6,8-13,15,30-32
+  s_5eed5f35a8cbe4::t_d7ea5383599e6b 409-414
+  s_5eed5f35a8cbe4::t_83be219dc5326a 270-271
+  s_5eed5f35a8cbe4::t_1a48461ee29fa5 463
+  s_5eed5f35a8cbe4::t_c0d9ee24febd77 238-239
+  s_5eed5f35a8cbe4::t_578287399e970b 193
+  s_5eed5f35a8cbe4::t_6ef05ec587385e 212-213
+  s_5eed5f35a8cbe4::t_60b624898884f4 224-225,227
+  s_5eed5f35a8cbe4::t_79cd2e3671fce8 347-348
+  s_5eed5f35a8cbe4::t_b249b4354b3688 258-259
+  s_5eed5f35a8cbe4::t_7fcd649bb2bdfe 163-164,172-174
+lib/kcc-inventory.mjs
+  s_5eed5f35a8cbe4::t_69b9867957f7b7 30-40
+  s_5eed5f35a8cbe4::t_2ed99592457c6e 150
+bin/cli.mjs
+  s_5eed5f35a8cbe4::t_3e651b93ffffa4 27-29
+lib/k8s-rest.mjs
+  s_5eed5f35a8cbe4::t_0dc4867dae4d8b 1-146
+README.md
+  s_5eed5f35a8cbe4::t_e07a41d6832b51 120-122,128-136
+  s_5eed5f35a8cbe4::t_f413e09ecd4fa6 189-190
+  s_4e6259a95b260c::t_8508d579824c8b 137
+package-lock.json
+  s_5eed5f35a8cbe4::t_99a47820ebc023 3,9,12-13,311-325
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "fafa95d88ec278fc5a4da3e4ea88b71f24115ac3",
+  "prompts": {},
+  "sessions": {
+    "s_4e6259a95b260c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a037a6-b96e-74d2-ac3e-cea73dffd115",
+        "model": "unknown"
+      },
+      "human_author": "vitaliytv <v@nitra.ai>"
+    },
+    "s_5eed5f35a8cbe4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2d90b302-72b5-4ee2-9174-88208616d1a0",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "vitaliytv <v@nitra.ai>"
+    }
+  }
+}
