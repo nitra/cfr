@@ -1,0 +1,36 @@
+bin/cli.mjs
+  s_5eed5f35a8cbe4::t_e96cdeda84fc58 2-3
+  s_5eed5f35a8cbe4::t_1bb9566bf5455e 5,9,11-14,16,19-22,25-26,30-36
+package.json
+  s_5eed5f35a8cbe4::t_2e74575e13cc7d 4,11-14
+  s_5eed5f35a8cbe4::t_93628b8f79dde1 32-33
+  s_5eed5f35a8cbe4::t_b027f75798ee80 3
+README.md
+  s_5eed5f35a8cbe4::t_91361cd912f898 3-12,19,23,27
+  s_5eed5f35a8cbe4::t_bb7316b539b21f 61
+  s_5eed5f35a8cbe4::t_96530e43ad0433 75,81-141
+test/cli.test.mjs
+  s_5eed5f35a8cbe4::t_2daa7dcf2c374c 11,13,23-24
+  s_5eed5f35a8cbe4::t_8f344113ee802b 52-76
+  s_5eed5f35a8cbe4::t_3407d84b956027 25-26
+lib/kcc-inventory.mjs
+  s_5eed5f35a8cbe4::t_9d08568848005b 1-457
+lib/check.mjs
+  s_5eed5f35a8cbe4::t_83f3423bca031d 1-135
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "4089e46d861e23d3a8aafb6bf0e220f199aefef8",
+  "prompts": {},
+  "sessions": {
+    "s_5eed5f35a8cbe4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2d90b302-72b5-4ee2-9174-88208616d1a0",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "vitaliytv <v@nitra.ai>"
+    }
+  }
+}
