@@ -1,14 +1,17 @@
 {
   "name": "@nitra/cfr",
-  "version": "0.1.2",
-  "description": "Verify that every YAML file in a Kustomize directory is listed in kustomization.yaml's explicit resources: (and vice versa) — catches files Flux silently ignores.",
+  "version": "0.2.0",
+  "description": "A handful of small k8s/GitOps CLI utilities: `check` verifies every YAML file in a Kustomize directory is listed in kustomization.yaml's explicit resources: (and vice versa); `kcc-inventory` diffs a GCP Config Connector namespace against the live project to find drift.",
   "keywords": [
     "kustomize",
     "flux",
     "fluxcd",
     "kubernetes",
     "gitops",
-    "lint"
+    "lint",
+    "config-connector",
+    "kcc",
+    "gcp"
   ],
   "homepage": "https://github.com/nitra/cfr#readme",
   "bugs": "https://github.com/nitra/cfr/issues",
@@ -26,7 +29,8 @@
     "cfr": "./bin/cli.mjs"
   },
   "files": [
-    "bin"
+    "bin",
+    "lib"
   ],
   "publishConfig": {
     "access": "public"

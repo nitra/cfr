@@ -8,9 +8,9 @@ const here = dirname(fileURLToPath(import.meta.url));
 const cli = join(here, '..', 'bin', 'cli.mjs');
 const fixtures = join(here, 'fixtures');
 
-function run(target) {
+function runArgs(...args) {
   try {
-    const stdout = execFileSync('node', [cli, join(fixtures, target)], {
+    const stdout = execFileSync('node', [cli, ...args], {
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'pipe'],
     });
@@ -18,6 +18,10 @@ function run(target) {
   } catch (err) {
     return { code: err.status, stdout: err.stdout, stderr: err.stderr };
   }
+}
+
+function run(target) {
+  return runArgs(join(fixtures, target));
 }
 
 test('exits 0 when resources: matches the directory', () => {
@@ -44,4 +48,29 @@ test('exits 1 with a clear error when kustomization.yaml is absent', () => {
   const { code, stderr } = run('..');
   assert.equal(code, 1);
   assert.match(stderr, /no kustomization\.yaml/);
+});
+
+test('"check" subcommand behaves the same as the bare default', () => {
+  const { code, stdout } = runArgs('check', join(fixtures, 'ok'));
+  assert.equal(code, 0);
+  assert.match(stdout, /^✓ /);
+});
+
+test('top-level --help lists both commands', () => {
+  const { code, stdout } = runArgs('--help');
+  assert.equal(code, 0);
+  assert.match(stdout, /check/);
+  assert.match(stdout, /kcc-inventory/);
+});
+
+test('"kcc-inventory --help" shows its own usage without touching gcloud/kubectl', () => {
+  const { code, stdout } = runArgs('kcc-inventory', '--help');
+  assert.equal(code, 0);
+  assert.match(stdout, /kcc-inventory <namespace>/);
+});
+
+test('"kcc-inventory" with no target exits 2 with a usage error', () => {
+  const { code, stderr } = runArgs('kcc-inventory');
+  assert.equal(code, 2);
+  assert.match(stderr, /usage:/);
 });

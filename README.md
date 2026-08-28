@@ -1,19 +1,30 @@
 # @nitra/cfr
 
+A handful of small k8s/GitOps CLI utilities, one `npx`/`bunx` away — no
+install, no dependencies. Two commands so far:
+
+- **`check`** (default) — verify a Kustomize directory's `resources:` list
+  matches what's actually on disk
+- **`kcc-inventory`** — diff a GCP Config Connector namespace against the
+  live project to find drift
+
+## `check`
+
 Kustomize's `resources:` field is an **explicit list**, not a glob. Add a
 YAML manifest to a directory managed by a [Flux](https://fluxcd.io)
 `Kustomization` without listing it in `resources:`, and
 `kustomize-controller` silently skips it — no error, no warning, the
 object just never reaches the cluster.
 
-This CLI catches that drift before it ships: it compares every
+This command catches that drift before it ships: it compares every
 `*.yaml`/`*.yml` file physically present in a directory against the
 `resources:` list in its `kustomization.yaml`, in both directions.
 
-## Usage
+### Usage
 
 ```sh
 npx @nitra/cfr [dir-or-kustomization.yaml ...]
+npx @nitra/cfr check [dir-or-kustomization.yaml ...]   # same, explicit
 ```
 
 No arguments checks `.`. Point it at one or more directories (or direct
@@ -47,7 +58,7 @@ jobs:
       - run: npx @nitra/cfr flux/clusters/production
 ```
 
-## What it checks
+### What it checks
 
 For each target directory:
 
@@ -61,13 +72,73 @@ Entries containing `/` (subdirectories, components) or a URL scheme
 against the specific footgun of a loose file sitting next to
 `kustomization.yaml` that nobody remembered to list.
 
-## Why this exists
+### Why this exists
 
 A real incident: a PR added two manifests to a Flux cluster directory but
 missed adding them to `resources:`. The PR merged clean, CI was green,
 `git log` showed the files — and Flux applied nothing. No error surfaced
 anywhere; the only symptom was the feature silently not existing in the
-cluster. This tool turns that into a CI failure at PR time instead.
+cluster. This command turns that into a CI failure at PR time instead.
+
+## `kcc-inventory`
+
+[Config Connector](https://cloud.google.com/config-connector/docs/overview)
+(KCC) lets a Kubernetes namespace declare a GCP project's resources as
+CRs, with a controller reconciling git against reality. It won't tell you
+about the reverse direction: a resource created straight in GCP — by hand,
+by another tool, by a Terraform run nobody ported — that KCC has never
+heard of, and never will until someone points it out.
+
+`kcc-inventory` is that someone. Per namespace (any namespace carrying the
+annotation `cnrm.cloud.google.com/project-id`), it compares what's live in
+the GCP project against what's declared under KCC, for
+`IAMServiceAccount`, `IAMServiceAccountKey`, `ArtifactRegistryRepository`,
+`ContainerCluster`, `ContainerNodePool`, `StorageBucket`, `ComputeAddress`,
+`DNSManagedZone`, `DNSRecordSet`, and `IAMPolicyMember`.
+
+Read-only — it reports, it doesn't touch anything.
+
+### Usage
+
+```sh
+npx @nitra/cfr kcc-inventory <namespace>
+npx @nitra/cfr kcc-inventory --all                              # every KCC namespace
+npx @nitra/cfr kcc-inventory <namespace|--all> --json
+npx @nitra/cfr kcc-inventory <namespace|--all> --include-system  # don't filter GCP-managed noise
+```
+
+```
+### namespace nitraai -> проєкт nitraai ###
+== StorageBucket (проєкт nitraai) ==
+  DRIFT — є в GCP, немає в KCC:
+    old-backups-bucket
+  чисто (11 live, 11 kcc)
+```
+
+Requires `gcloud` and `kubectl` on `PATH`, authenticated against the
+target project/cluster. Set `KUBE_CONTEXT` to target a specific
+kubeconfig context explicitly instead of relying on the current one.
+
+By default, GCP-managed system noise is filtered out — Google-owned
+service accounts, `gcr.io` shims, GKE-managed node pools and DNS zones,
+legacy bucket ACL entries. Pass `--include-system` to see it anyway.
+
+### Two directions
+
+- **DRIFT** — live in GCP, not declared under KCC. Either adopt it (give
+  it a matching CR with the right `resourceID`) or delete it by hand.
+- **ORPHAN** — declared under KCC, no longer live in GCP. The CR is
+  pointing at nothing; safe to remove from git.
+
+### A known Cloud Asset Inventory quirk
+
+`kcc-inventory` uses `gcloud asset search-all-resources` /
+`search-all-iam-policies` — one or two calls per project instead of a
+`gcloud X list` per resource kind. That index can lag: it has been
+observed returning `DNSRecordSet` and `ComputeAddress` entries for
+resources already deleted in GCP. Both are cross-checked against a direct,
+cheap `gcloud` call before being reported, and any stale entry found this
+way is counted and noted separately — never silently folded into DRIFT.
 
 ## License
 
