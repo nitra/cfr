@@ -117,15 +117,23 @@ npx @nitra/cfr kcc-inventory <namespace|--all> --include-system  # don't filter 
   чисто (11 live, 11 kcc)
 ```
 
-Requires `kubectl` on `PATH`, pointed at the target cluster. Set
-`KUBE_CONTEXT` to target a specific kubeconfig context explicitly instead
-of relying on the current one. The GCP side talks to Cloud Asset
-Inventory, IAM, and Compute Engine directly over REST — no `gcloud` CLI
-needed, just [Application Default
+No `gcloud` or `kubectl` CLI needed on `PATH` — the GCP side (Cloud Asset
+Inventory, IAM, Compute Engine) and the cluster side both talk REST
+directly, authenticated with [Application Default
 Credentials](https://cloud.google.com/docs/authentication/application-default-credentials)
 (`gcloud auth application-default login` locally, a service account key
 via `GOOGLE_APPLICATION_CREDENTIALS`, or the ambient credentials on
 GCE/GKE/Cloud Build).
+
+Cluster connection details still come from your kubeconfig (`KUBECONFIG`,
+default `~/.kube/config`) — that part isn't going anywhere, it's the only
+place the cluster's API server address and CA certificate live. Set
+`KUBE_CONTEXT` to target a specific context explicitly instead of relying
+on `current-context`. The GCP access token is used directly as the
+cluster bearer token (the same trick `gke-gcloud-auth-plugin` performs
+under `kubectl`), so this only works against **GKE** clusters — a
+kubeconfig using client certs, a static token, or a non-GCP exec plugin
+(EKS, AKS, ...) won't authenticate.
 
 By default, GCP-managed system noise is filtered out — Google-owned
 service accounts, `gcr.io` shims, GKE-managed node pools and DNS zones,
@@ -178,9 +186,8 @@ npx @nitra/cfr get-resources <namespace|--all> --include-system
 diagnostics: [...]}` — `source` is `"gcp"` or `"kcc"`, `diagnostics`
 carries the same stale-cache/GKE-managed notes described above.
 
-Same requirements as `kcc-inventory`: `kubectl` on `PATH`, Application
-Default Credentials for the GCP side, `--include-system` to see
-GCP-managed noise.
+Same requirements as `kcc-inventory` — no `gcloud`/`kubectl` needed, GKE
+only, `--include-system` to see GCP-managed noise.
 
 ## License
 

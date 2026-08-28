@@ -24,9 +24,9 @@ const COMMANDS = {
   'get-resources': runGetResources,
 };
 
-// check is synchronous (local filesystem only); kcc-inventory is async
-// (talks to GCP/kubectl over the network) — awaiting a plain number is a
-// no-op, so this works for either.
+// check is synchronous (local filesystem only); the other two are async
+// (talk to GCP/Kubernetes over the network) — awaiting a plain number is
+// a no-op, so this works for either.
 async function main(argv) {
   if (argv[0] === '-h' || argv[0] === '--help') {
     process.stdout.write(TOP_HELP);
