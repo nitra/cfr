@@ -93,10 +93,16 @@ heard of, and never will until someone points it out.
 
 `kcc-inventory` is that someone. Per namespace (any namespace carrying the
 annotation `cnrm.cloud.google.com/project-id`), it compares what's live in
-the GCP project against what's declared under KCC, for
-`IAMServiceAccount`, `IAMServiceAccountKey`, `ArtifactRegistryRepository`,
-`ContainerCluster`, `ContainerNodePool`, `StorageBucket`, `ComputeAddress`,
-`DNSManagedZone`, `DNSRecordSet`, and `IAMPolicyMember`.
+the GCP project against what's declared under KCC. Besides IAM, GKE,
+Artifact Registry, buckets, addresses and Cloud DNS, it includes Cloud Run
+(`RunService`, `RunJob`), `CloudSchedulerJob`, `EventarcTrigger`, Pub/Sub,
+Secret Manager, VPC Access, KMS, and the Cloud Run HTTP(S) load-balancer
+chain (network, subnetwork, backend service, serverless NEG, URL map,
+target HTTPS proxy, global forwarding rule, and SSL certificates).
+
+Location-scoped resources use the canonical `location/name` ID, preventing
+resources with the same name in different regions from being merged. IAM
+bindings on a `RunService` are normalized to the same identity.
 
 Read-only — it reports, it doesn't touch anything.
 
