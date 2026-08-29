@@ -39,7 +39,7 @@ jobs:
 
       - run: npm ci
 
-      - run: node --test test/cli.test.mjs
+      - run: npm test
 
       - name: Verify tag matches package.json version
         run: |
