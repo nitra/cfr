@@ -152,8 +152,11 @@ do not adopt them with KCC.
 
 ### Two directions
 
-- **DRIFT** — live in GCP, not declared under KCC. Either adopt it (give
-  it a matching CR with the right `resourceID`) or delete it by hand.
+- **DRIFT** — live in GCP, not declared under a known controller. Either
+  adopt it (give it a matching CR with the right `resourceID`), declare its
+  confirmed external controller in CFR's ownership catalog, or delete it by hand.
+- **COVERED_OPENTOFU** — live in GCP and explicitly controlled by OpenTofu;
+  it is visible in the report, but not treated as unowned KCC drift.
 - **ORPHAN** — declared under KCC, no longer live in GCP. The CR is
   pointing at nothing; safe to remove from git.
 
