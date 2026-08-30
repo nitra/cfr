@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { isGkeGatewayManaged } from '../lib/get-resources.mjs';
+import { isDefaultNetwork, isGkeGatewayManaged, isManagedZoneApexRecord } from '../lib/get-resources.mjs';
 
 test('recognizes regional and global GKE Gateway controller resources', () => {
   assert.equal(isGkeGatewayManaged('us-central1/gkegw1-4v0d-adminer-adminer-hl-8080-a1b2c3'), true);
@@ -10,4 +10,12 @@ test('recognizes regional and global GKE Gateway controller resources', () => {
 test('does not hide similarly scoped user-owned Load Balancer resources', () => {
   assert.equal(isGkeGatewayManaged('us-central1/adminer-backend'), false);
   assert.equal(isGkeGatewayManaged('global/public-url-map'), false);
+});
+
+test('recognizes only provider-owned default network and zone-apex records', () => {
+  assert.equal(isDefaultNetwork('global/default'), true);
+  assert.equal(isDefaultNetwork('global/platform'), false);
+  assert.equal(isManagedZoneApexRecord('git.7n.ai.', 'NS', 'git.7n.ai.'), true);
+  assert.equal(isManagedZoneApexRecord('git.7n.ai.', 'SOA', 'git.7n.ai.'), true);
+  assert.equal(isManagedZoneApexRecord('child.git.7n.ai.', 'NS', 'git.7n.ai.'), false);
 });

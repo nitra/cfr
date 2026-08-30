@@ -142,11 +142,13 @@ kubeconfig using client certs, a static token, or a non-GCP exec plugin
 (EKS, AKS, ...) won't authenticate.
 
 By default, GCP-managed system noise is filtered out — Google-owned
-service accounts, `gcr.io` shims, resources whose `gkegw<generation>-`
-name shows they are created by the GKE Gateway controller, GKE-managed node
-pools and DNS zones, and legacy bucket ACL entries. Pass `--include-system`
-to see it anyway. Gateway-generated backend services, URL maps, and HTTPS
-proxies are derived from Gateway API objects; do not adopt them with KCC.
+service accounts, Artifact Registry shims, the GCP default network and its
+subnets, Cloud DNS zone-apex `NS`/`SOA` records, resources whose
+`gkegw<generation>-` name shows they are created by the GKE Gateway
+controller, GKE-managed node pools and DNS zones, and legacy bucket ACL
+entries. Pass `--include-system` to see it anyway. Gateway-generated backend
+services, URL maps, and HTTPS proxies are derived from Gateway API objects;
+do not adopt them with KCC.
 
 ### Two directions
 

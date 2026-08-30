@@ -5,6 +5,14 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.3] - 2026-08-30
+
+### Fixed
+
+- Exclude GCP-managed Artifact Registry shims, the default network and its
+  subnetworks, and managed-zone apex `NS`/`SOA` records from default KCC
+  inventory output; `--include-system` retains them for inspection.
+
 ## [0.6.2] - 2026-08-30
 
 ### Fixed
