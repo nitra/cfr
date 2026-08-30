@@ -5,6 +5,14 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.2] - 2026-08-30
+
+### Fixed
+
+- Exclude Compute backend services, URL maps, and HTTPS proxies created by
+  the GKE Gateway controller from the default KCC drift report; pass
+  `--include-system` to inspect them.
+
 ## [0.6.1] - 2026-08-29
 
 ### Fixed
