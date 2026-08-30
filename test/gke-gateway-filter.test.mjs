@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { isDefaultNetwork, isGkeGatewayManaged, isManagedZoneApexRecord } from '../lib/get-resources.mjs';
+import { isDefaultNetwork, isGkeGatewayManaged, isGkeNodePoolName, isManagedZoneApexRecord } from '../lib/get-resources.mjs';
 
 test('recognizes regional and global GKE Gateway controller resources', () => {
   assert.equal(isGkeGatewayManaged('us-central1/gkegw1-4v0d-adminer-adminer-hl-8080-a1b2c3'), true);
@@ -18,4 +18,9 @@ test('recognizes only provider-owned default network and zone-apex records', () 
   assert.equal(isManagedZoneApexRecord('git.7n.ai.', 'NS', 'git.7n.ai.'), true);
   assert.equal(isManagedZoneApexRecord('git.7n.ai.', 'SOA', 'git.7n.ai.'), true);
   assert.equal(isManagedZoneApexRecord('child.git.7n.ai.', 'NS', 'git.7n.ai.'), false);
+});
+
+test('recognizes NodePool resource names that need direct GKE verification', () => {
+  assert.equal(isGkeNodePoolName('//container.googleapis.com/projects/nitraai/zones/us-central1-a/clusters/main/nodePools/spin-t2d-benchmark'), true);
+  assert.equal(isGkeNodePoolName('projects/nitraai/locations/us-central1-a/clusters/main'), false);
 });

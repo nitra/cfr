@@ -1,6 +1,6 @@
 {
   "name": "@nitra/cfr",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "A handful of small k8s/GitOps CLI utilities: `check` verifies every YAML file in a Kustomize directory is listed in kustomization.yaml's explicit resources: (and vice versa); `kcc-inventory` diffs a GCP Config Connector namespace against the live project to find drift; `get-resources` is that same scan without the diff.",
   "keywords": [
     "kustomize",
