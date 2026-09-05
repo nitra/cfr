@@ -5,6 +5,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2026-09-05
+
+### Added
+
+- Merge repeatable `--ownership` catalogs and `--tofu` state roots into
+  `kcc-inventory`, with controller-conflict detection and optional
+  `--show-covered` output.
+- Inventory GCP and KCC `IAMWorkloadIdentityPool` and
+  `IAMWorkloadIdentityPoolProvider` resources.
+
+### Changed
+
+- Classify live resources as `covered_kcc`, `covered_opentofu`,
+  `covered_ownership`, or `uncovered`; report controller-specific orphans.
+
 ## [0.6.6] - 2026-08-30
 
 ### Fixed

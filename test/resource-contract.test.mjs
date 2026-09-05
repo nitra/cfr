@@ -18,3 +18,11 @@ test('Cloud Run, trigger, dependency, and frontend inventory kinds have KCC GVRs
     assert.ok(CRD_GVR[kind].plural);
   }
 });
+
+test('Workload Identity pool and provider have inventory kinds and KCC GVRs', () => {
+  for (const kind of ['IAMWorkloadIdentityPool', 'IAMWorkloadIdentityPoolProvider']) {
+    assert.ok(KIND_ORDER.includes(kind), `${kind} is reported`);
+    assert.equal(CRD_GVR[kind].group, 'iam.cnrm.cloud.google.com');
+    assert.ok(CRD_GVR[kind].plural);
+  }
+});

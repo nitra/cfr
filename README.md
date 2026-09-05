@@ -93,7 +93,9 @@ heard of, and never will until someone points it out.
 
 `kcc-inventory` is that someone. Per namespace (any namespace carrying the
 annotation `cnrm.cloud.google.com/project-id`), it compares what's live in
-the GCP project against what's declared under KCC. Besides IAM, GKE,
+the GCP project against the union of KCC declarations, OpenTofu state, and
+explicit ownership catalogs. Besides IAM (including Workload Identity pools
+and providers), GKE,
 Artifact Registry, buckets, addresses and Cloud DNS, it includes Cloud Run
 (`RunService`, `RunJob`), `CloudSchedulerJob`, `EventarcTrigger`, Pub/Sub,
 Secret Manager, VPC Access, KMS, and the Cloud Run HTTP(S) load-balancer
@@ -113,15 +115,28 @@ npx @nitra/cfr kcc-inventory <namespace>
 npx @nitra/cfr kcc-inventory --all                              # every KCC namespace
 npx @nitra/cfr kcc-inventory <namespace|--all> --json
 npx @nitra/cfr kcc-inventory <namespace|--all> --include-system  # don't filter GCP-managed noise
+npx @nitra/cfr kcc-inventory nitraai \
+  --ownership platform/kcc/inventory-ownership.json \
+  --tofu platform/workload-identity/tofu
+npx @nitra/cfr kcc-inventory nitraai --show-covered
 ```
 
 ```
 ### namespace nitraai -> проєкт nitraai ###
 == StorageBucket (проєкт nitraai) ==
-  DRIFT — є в GCP, немає в KCC:
-    old-backups-bucket
-  чисто (11 live, 11 kcc)
+  UNCOVERED — old-backups-bucket
 ```
+
+`--ownership PATH` and `--tofu DIR` are repeatable. Ownership paths use the
+version-1 `{resources: [...]}` catalog. OpenTofu roots are read from actual
+state via `tofu -chdir=DIR show -json`; parsing `.tf` configuration alone
+would incorrectly mark resources that were never imported or applied as
+covered. Consequently, `tofu` must be available on `PATH` only when
+`--tofu` is used.
+
+Overlapping declarations are an error: a canonical
+`(project, kind, id)` resource cannot simultaneously belong to KCC,
+OpenTofu, or an ownership exception.
 
 No `gcloud` or `kubectl` CLI needed on `PATH` — the GCP side (Cloud Asset
 Inventory, IAM, Compute Engine) and the cluster side both talk REST
@@ -150,12 +165,14 @@ entries. Pass `--include-system` to see it anyway. Gateway-generated backend
 services, URL maps, and HTTPS proxies are derived from Gateway API objects;
 do not adopt them with KCC.
 
-### Two directions
+### Coverage and orphans
 
-- **DRIFT** — live in GCP, not declared under KCC. Either adopt it (give
-  it a matching CR with the right `resourceID`) or delete it by hand.
-- **ORPHAN** — declared under KCC, no longer live in GCP. The CR is
-  pointing at nothing; safe to remove from git.
+- **UNCOVERED** — live in GCP but absent from KCC, OpenTofu state, and
+  ownership catalogs.
+- **ORPHAN_KCC**, **ORPHAN_OPENTOFU**, **ORPHAN_OWNERSHIP** — a controller
+  declaration exists, but its live GCP resource does not.
+- **COVERED_KCC**, **COVERED_OPENTOFU**, **COVERED_OWNERSHIP** — shown in
+  JSON and, for human output, only when `--show-covered` is passed.
 
 ### A known Cloud Asset Inventory quirk
 
