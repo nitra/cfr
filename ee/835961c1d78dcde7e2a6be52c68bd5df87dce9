@@ -1,0 +1,46 @@
+test/controller-inventory.test.mjs
+  s_8e515fb27441e3::t_b37b82d63b3166 1-98
+README.md
+  s_8e515fb27441e3::t_d9e9c918294de9 96-98,118-121,127,130-140,168,170-175
+CHANGELOG.md
+  s_8e515fb27441e3::t_b37b82d63b3166 8-22
+test/resource-contract.test.mjs
+  s_8e515fb27441e3::t_b37b82d63b3166 21-28
+test/gke-gateway-filter.test.mjs
+  s_8e515fb27441e3::t_72010885a5f533 3-9,33-36
+  s_8e515fb27441e3::t_8eaed6fc7d2deb 37
+lib/get-resources.mjs
+  s_8e515fb27441e3::t_72010885a5f533 97
+  s_8e515fb27441e3::t_d0c6471cccb545 20-21,75-96,378-380,394-402,406-421
+  s_8e515fb27441e3::t_aa3f02ff5a3189 98-100,381-393,403-405
+  s_8e515fb27441e3::t_9469f243a2f4f7 422
+lib/kcc-inventory.mjs
+  s_8e515fb27441e3::t_a4b16e61a5447f 6-10,17,21-22,26-27,49,51-52,60-67,69,110,112-124,132-134,137-154,158,165,182-187,201-209
+  s_8e515fb27441e3::t_5d8a5a48eedff8 50,159,164,166
+  s_8e515fb27441e3::t_b37b82d63b3166 210-215
+lib/k8s-rest.mjs
+  s_8e515fb27441e3::t_d0c6471cccb545 119-120
+package.json
+  s_8e515fb27441e3::t_b37b82d63b3166 3-4
+lib/controller-inventory.mjs
+  s_8e515fb27441e3::t_5d8a5a48eedff8 122,128
+  s_8e515fb27441e3::t_d0c6471cccb545 1-121,123-127,129-142
+package-lock.json
+  s_8e515fb27441e3::t_b6fa29ed3be07f 3,9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2",
+  "base_commit_sha": "ee835961c1d78dcde7e2a6be52c68bd5df87dce9",
+  "prompts": {},
+  "sessions": {
+    "s_8e515fb27441e3": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a06a62-af00-7df2-b2ee-5b3d1cef523c",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Vitalii Tverdokhlib <v@nitra.ai>"
+    }
+  }
+}
