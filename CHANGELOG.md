@@ -5,6 +5,15 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.2] - 2026-09-25
+
+### Fixed
+
+- Read bucket IAM policies from Cloud Asset snapshots so KCC-owned bucket
+  bindings are not reported as false orphans.
+- Distinguish IAM bindings by condition, preserving separate conditioned
+  bindings with the same role and member in inventory output.
+
 ## [0.7.1] - 2026-09-25
 
 ### Fixed
