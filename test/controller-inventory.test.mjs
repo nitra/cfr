@@ -36,6 +36,46 @@ test('reports controller-specific orphans', () => {
   assert.equal(result.status, 'orphan_opentofu');
 });
 
+test('keeps IAM bindings with distinct conditions as separate resources', () => {
+  const base = {
+    project: 'nitraai',
+    kind: 'IAMPolicyMember',
+    id: 'project/nitraai/roles/iam.workloadIdentityPoolAdmin/serviceAccount:kcc-nitraai@nitraai.iam.gserviceaccount.com',
+  };
+  const live = [
+    { ...base, condition: { title: 'provider-only', expression: 'resource.name == provider' } },
+    { ...base, condition: { title: 'pool-and-provider', expression: 'resource.name == pool || resource.name == provider' } },
+  ];
+
+  const results = classifyResources(live, []);
+
+  assert.equal(results.length, 2);
+  assert.deepEqual(results.map((resource) => resource.condition.title), [
+    'provider-only',
+    'pool-and-provider',
+  ]);
+  assert.ok(results.every((resource) => resource.status === 'uncovered'));
+});
+
+test('normalizes condition whitespace when matching KCC and live IAM bindings', () => {
+  const base = {
+    project: 'nitraai',
+    kind: 'IAMPolicyMember',
+    id: 'project/nitraai/roles/viewer/user:reader@example.com',
+  };
+  const [result] = classifyResources(
+    [{ ...base, condition: { title: 'scoped', expression: 'resource.name == provider' } }],
+    [{
+      ...base,
+      controller: 'kcc',
+      source: 'nitraai',
+      condition: { title: ' scoped ', expression: 'resource.name   ==   provider' },
+    }],
+  );
+
+  assert.equal(result.status, 'covered_kcc');
+});
+
 test('rejects overlapping declarations instead of choosing a controller by precedence', () => {
   assert.throws(() => classifyResources([pool], [
     { ...pool, controller: 'kcc', source: 'nitraai' },
