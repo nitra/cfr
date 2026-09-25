@@ -131,7 +131,9 @@ npx @nitra/cfr kcc-inventory nitraai --show-covered
 version-1 `{resources: [...]}` catalog. OpenTofu roots are read from actual
 state via `tofu -chdir=DIR show -json`; parsing `.tf` configuration alone
 would incorrectly mark resources that were never imported or applied as
-covered. Consequently, `tofu` must be available on `PATH` only when
+covered. GKE clusters and node pools in OpenTofu state use the same canonical
+`location/cluster` and `location/cluster/pool` IDs as live GCP and KCC
+resources. Consequently, `tofu` must be available on `PATH` only when
 `--tofu` is used.
 
 Overlapping declarations are an error: a canonical
