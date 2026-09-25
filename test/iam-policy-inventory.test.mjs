@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { liveIamPolicyIds, replaceBucketIamPolicies } from '../lib/get-resources.mjs';
+import {
+  liveIamPolicyIds,
+  liveIamPolicyResources,
+  replaceBucketIamPolicies,
+} from '../lib/get-resources.mjs';
 
 const searchEntries = [
   {
@@ -89,4 +93,24 @@ test('keeps legacy bucket bindings when system resources are explicitly included
   assert.ok(ids.includes(
     'bucket/missing-from-search/roles/storage.legacyBucketOwner/projectOwner:nitraai',
   ));
+});
+
+test('preserves IAM conditions alongside the canonical binding ID', () => {
+  const resources = liveIamPolicyResources([{
+    assetType: 'cloudresourcemanager.googleapis.com/Project',
+    resource: '//cloudresourcemanager.googleapis.com/projects/nitraai',
+    policy: {
+      bindings: [{
+        role: 'roles/iam.workloadIdentityPoolAdmin',
+        members: ['serviceAccount:kcc-nitraai@nitraai.iam.gserviceaccount.com'],
+        condition: {
+          title: 'provider-only',
+          expression: 'resource.name == provider',
+        },
+      }],
+    },
+  }], 'nitraai');
+
+  assert.equal(resources[0].condition.title, 'provider-only');
+  assert.match(resources[0].id, /roles\/iam\.workloadIdentityPoolAdmin/);
 });
