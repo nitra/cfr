@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  gkeNodePoolScopedId,
   isDefaultNetwork,
   isGkeGatewayManaged,
   isGkeNodePoolName,
@@ -29,6 +30,17 @@ test('recognizes only provider-owned default network and zone-apex records', () 
 test('recognizes NodePool resource names that need direct GKE verification', () => {
   assert.equal(isGkeNodePoolName('//container.googleapis.com/projects/nitraai/zones/us-central1-a/clusters/main/nodePools/spin-t2d-benchmark'), true);
   assert.equal(isGkeNodePoolName('projects/nitraai/locations/us-central1-a/clusters/main'), false);
+});
+
+test('keeps the location in canonical GKE NodePool IDs', () => {
+  assert.equal(
+    gkeNodePoolScopedId('//container.googleapis.com/projects/nitraai/zones/us-central1-a/clusters/main/nodePools/general-arm64'),
+    'us-central1-a/main/general-arm64',
+  );
+  assert.equal(
+    gkeNodePoolScopedId('//container.googleapis.com/projects/nitraai/regions/us-central1/clusters/main/nodePools/general-arm64'),
+    'us-central1/main/general-arm64',
+  );
 });
 
 test('recognizes the GKE-managed Workload Identity pool', () => {

@@ -75,6 +75,41 @@ test('normalizes root and child OpenTofu modules and diagnoses unsupported resou
   assert.equal(result.diagnostics[0].resourceType, 'google_unknown');
 });
 
+test('normalizes OpenTofu GKE resources to canonical inventory IDs', () => {
+  const state = {
+    values: {
+      root_module: {
+        resources: [
+          {
+            address: 'google_container_cluster.main',
+            mode: 'managed',
+            type: 'google_container_cluster',
+            values: { project: 'nitraai', location: 'us-central1-a', name: 'main' },
+          },
+          {
+            address: 'google_container_node_pool.pools["general-arm64"]',
+            mode: 'managed',
+            type: 'google_container_node_pool',
+            values: {
+              project: 'nitraai',
+              location: 'us-central1-a',
+              cluster: 'projects/nitraai/locations/us-central1-a/clusters/main',
+              name: 'general-arm64',
+            },
+          },
+        ],
+      },
+    },
+  };
+
+  const result = normalizeTofuState(state, 'tofu/gke-main');
+  assert.deepEqual(result.resources.map(({ kind, id }) => ({ kind, id })), [
+    { kind: 'ContainerCluster', id: 'us-central1-a/main' },
+    { kind: 'ContainerNodePool', id: 'us-central1-a/main/general-arm64' },
+  ]);
+  assert.deepEqual(result.diagnostics, []);
+});
+
 test('runs tofu show against every repeatable --tofu directory', () => {
   const calls = [];
   const spawn = (command, args) => {
