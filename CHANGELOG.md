@@ -5,6 +5,43 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Report restored disks as `controller_managed`, separately from direct
+  OpenTofu coverage, only with exact successful VolumeRestore handles and
+  a live RestorePlan covered by actual supplied state.
+- Match GKE RestorePlans and account for Restore/VolumeRestore executions.
+- Use direct API ownership evidence to filter automatically allocated Cloud NAT
+  addresses and GKE control-plane private endpoint subnetworks.
+- Inventory API enablement directly through paginated Service Usage and match
+  `google_project_service`; enabled APIs missing from state and disabled APIs
+  retained in state fail strict mode.
+- Split Compute project settings into metadata entries, default network tier
+  and Cloud Armor tier using the direct API; preserve GKE metadata ownership
+  and fail strict mode for unmapped settings.
+- Match Resource Manager projects, project billing associations and zonal
+  Compute InstanceSettings; keep aggregate/unsupported project settings visible.
+- Extend OpenTofu-only live/state mappings to Firestore, Monitoring, Logging,
+  Compute snapshots/firewall/VM/group/template/health check/HTTP proxy/routes,
+  regional forwarding rules, zonal NEGs, and Service Directory resources.
+- Account for every asset type in a project search: unknown infrastructure
+  produces `unsupported_live_resource` and fails strict mode; runtime contents
+  and controller-owned resources have explicit skip reasons.
+
+- `tofu-inventory`: scan an explicitly named GCP project against one or more
+  OpenTofu state roots without requiring Kubernetes, KCC, or a kubeconfig.
+- `tofu-inventory --strict`: fail CI on uncovered/orphan resources and
+  unsupported managed `google_*` resources in OpenTofu state.
+- Normalize OpenTofu state for every GCP resource family currently collected
+  by the inventory, including Cloud Run, Eventarc, IAM bindings, and the
+  global/regional serverless HTTP(S) load-balancer chain.
+- Add OpenTofu-only inventory coverage for persistent disks, Cloud Router/NAT,
+  Backup for GKE plans, and Cloud Build triggers. GKE node boot disks,
+  private endpoints, and GKE Ingress load-balancer resources remain excluded
+  from this state ownership boundary.
+
 ## [0.7.3] - 2026-09-25
 
 ### Fixed

@@ -2,6 +2,7 @@
 import { run as runCheck } from '../lib/check.mjs';
 import { run as runKccInventory } from '../lib/kcc-inventory.mjs';
 import { run as runGetResources } from '../lib/get-resources.mjs';
+import { run as runTofuInventory } from '../lib/tofu-inventory.mjs';
 
 const TOP_HELP = `cfr (@nitra/cfr) — a handful of small k8s/GitOps CLI utilities
 
@@ -14,6 +15,7 @@ Commands:
                   (default when the first argument isn't a known command)
   kcc-inventory   GCP Config Connector (KCC) drift inventory
   get-resources   Raw KCC/GCP resource list behind kcc-inventory, no diff
+  tofu-inventory  GCP OpenTofu-only drift inventory (no Kubernetes or KCC)
 
 Run "npx @nitra/cfr <command> --help" for command-specific help.
 `;
@@ -22,10 +24,11 @@ const COMMANDS = {
   check: runCheck,
   'kcc-inventory': runKccInventory,
   'get-resources': runGetResources,
+  'tofu-inventory': runTofuInventory,
 };
 
-// check is synchronous (local filesystem only); the other two are async
-// (talk to GCP/Kubernetes over the network) — awaiting a plain number is
+// check is synchronous (local filesystem only); inventory commands are async
+// (talk to GCP and, for KCC commands, Kubernetes over the network) — awaiting a plain number is
 // a no-op, so this works for either.
 async function main(argv) {
   if (argv[0] === '-h' || argv[0] === '--help') {

@@ -1,7 +1,7 @@
 {
   "name": "@nitra/cfr",
   "version": "0.7.3",
-  "description": "Kubernetes and GCP inventory utilities: validate Kustomize resources and reconcile live GCP coverage across Config Connector, OpenTofu state, and explicit ownership catalogs.",
+  "description": "Kubernetes and GCP inventory utilities: validate Kustomize resources and reconcile live GCP coverage through Config Connector or OpenTofu state.",
   "keywords": [
     "kustomize",
     "flux",
@@ -9,6 +9,7 @@
     "kubernetes",
     "gitops",
     "lint",
+    "opentofu",
     "config-connector",
     "kcc",
     "gcp"

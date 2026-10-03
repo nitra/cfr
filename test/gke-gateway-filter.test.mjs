@@ -4,10 +4,26 @@ import {
   gkeNodePoolScopedId,
   isDefaultNetwork,
   isGkeGatewayManaged,
+  isGkeIngressManaged,
   isGkeNodePoolName,
+  isGkePrivateEndpointAddress,
+  isAutomaticNatAddress,
+  gkePrivateEndpointSubnetworkIds,
   isGkeWorkloadIdentityPool,
   isManagedZoneApexRecord,
 } from '../lib/get-resources.mjs';
+
+test('controller ownership uses API evidence for NAT addresses and GKE private endpoint subnetworks', () => {
+  assert.equal(isAutomaticNatAddress({ purpose: 'NAT_AUTO' }), true);
+  assert.equal(isAutomaticNatAddress({ name: 'nat-auto-ip-user', purpose: 'GCE_ENDPOINT' }), false);
+  const clusters = [
+    { controlPlaneEndpointsConfig: { ipEndpointsConfig: { privateEndpointSubnetwork: 'projects/demo/regions/eu/subnetworks/managed' } } },
+    { privateClusterConfig: { privateEndpointSubnetwork: 'projects/demo/regions/eu/subnetworks/legacy' } },
+    { privateClusterConfig: { privateEndpointSubnetwork: 'projects/other/regions/eu/subnetworks/shared' } },
+    { name: 'gke-looking' },
+  ];
+  assert.deepEqual([...gkePrivateEndpointSubnetworkIds(clusters, 'demo')], ['eu/managed', 'eu/legacy']);
+});
 
 test('recognizes regional and global GKE Gateway controller resources', () => {
   assert.equal(isGkeGatewayManaged('us-central1/gkegw1-4v0d-adminer-adminer-hl-8080-a1b2c3'), true);
@@ -17,6 +33,14 @@ test('recognizes regional and global GKE Gateway controller resources', () => {
 test('does not hide similarly scoped user-owned Load Balancer resources', () => {
   assert.equal(isGkeGatewayManaged('us-central1/adminer-backend'), false);
   assert.equal(isGkeGatewayManaged('global/public-url-map'), false);
+});
+
+test('recognizes GKE Ingress resources without hiding a project-owned IP', () => {
+  assert.equal(isGkeIngressManaged('global/k8s2-fr-abcd-default-web-1234'), true);
+  assert.equal(isGkeIngressManaged('global/mcrt-12345678-1234-1234-1234-123456789abc'), true);
+  assert.equal(isGkeIngressManaged('global/web-static-ip'), false);
+  assert.equal(isGkePrivateEndpointAddress('europe-west3/gke-pda-41f03645-803b237c-pe'), true);
+  assert.equal(isGkePrivateEndpointAddress('europe-west3/gke-outward-ip'), false);
 });
 
 test('recognizes only provider-owned default network and zone-apex records', () => {
