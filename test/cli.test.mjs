@@ -56,12 +56,13 @@ test('"check" subcommand behaves the same as the bare default', () => {
   assert.match(stdout, /^✓ /);
 });
 
-test('top-level --help lists all three commands', () => {
+test('top-level --help lists all inventory commands', () => {
   const { code, stdout } = runArgs('--help');
   assert.equal(code, 0);
   assert.match(stdout, /check/);
   assert.match(stdout, /kcc-inventory/);
   assert.match(stdout, /get-resources/);
+  assert.match(stdout, /tofu-inventory/);
 });
 
 test('"kcc-inventory --help" shows its own usage without touching gcloud/kubectl', () => {
@@ -84,6 +85,20 @@ test('"get-resources --help" shows its own usage without touching gcloud/kubectl
 
 test('"get-resources" with no target exits 2 with a usage error', () => {
   const { code, stderr } = runArgs('get-resources');
+  assert.equal(code, 2);
+  assert.match(stderr, /usage:/);
+});
+
+test('"tofu-inventory --help" needs neither KCC nor kubeconfig', () => {
+  const { code, stdout } = runArgs('tofu-inventory', '--help');
+  assert.equal(code, 0);
+  assert.match(stdout, /--project PROJECT/);
+  assert.match(stdout, /--tofu DIR/);
+  assert.match(stdout, /does not read Kubernetes/);
+});
+
+test('"tofu-inventory" requires an explicit project and OpenTofu state root', () => {
+  const { code, stderr } = runArgs('tofu-inventory');
   assert.equal(code, 2);
   assert.match(stderr, /usage:/);
 });
