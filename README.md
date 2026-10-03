@@ -1,7 +1,7 @@
 # @nitra/cfr
 
-A handful of small k8s/GitOps CLI utilities, one `npx`/`bunx` away — no
-install. Three commands so far:
+A handful of small Kubernetes, GitOps, and GCP CLI utilities, one `npx`/`bunx` away — no
+install. Four commands so far:
 
 - **`check`** (default) — verify a Kustomize directory's `resources:` list
   matches what's actually on disk
@@ -9,6 +9,8 @@ install. Three commands so far:
   live project to find drift
 - **`get-resources`** — the raw resource list `kcc-inventory` diffs,
   without the diff
+- **`tofu-inventory`** — diff an explicitly named GCP project against
+  OpenTofu state, without Kubernetes or Config Connector
 
 ## `check`
 
@@ -185,6 +187,104 @@ returning `DNSRecordSet` and `ComputeAddress` entries for resources
 already deleted in GCP. Both are cross-checked against a direct Compute
 Engine call before being reported, and any stale entry found this way is
 counted and noted separately — never silently folded into DRIFT.
+
+## `tofu-inventory`
+
+`tofu-inventory` is the KCC-free variant of the GCP coverage scan. It reads
+live resources from an explicit GCP project and declarations from one or more
+real OpenTofu state roots. There is no Kubernetes API request, KCC namespace,
+KCC CRD, or kubeconfig requirement.
+
+```sh
+npx @nitra/cfr tofu-inventory \
+  --project nitraai \
+  --tofu infrastructure/core \
+  --tofu infrastructure/gke
+
+# Gate CI on uncovered/orphan resources and unknown google_* state types.
+npx @nitra/cfr tofu-inventory \
+  --project nitraai \
+  --tofu infrastructure/core \
+  --strict
+```
+
+It reports `UNCOVERED` live GCP resources and `ORPHAN_OPENTOFU` declarations
+whose cloud resource is absent. `--show-covered` includes the normal
+`COVERED_OPENTOFU` entries, and `--json` provides the machine-readable form.
+As with `kcc-inventory`, state is read with `tofu -chdir=DIR show -json`, never
+from `.tf` source alone.
+
+OpenTofu state is normalized for every resource family currently covered by
+the live inventory: service accounts and keys, Workload Identity pools,
+Artifact Registry, GKE, buckets, addresses, DNS, Cloud Run, Scheduler,
+Eventarc, Pub/Sub, Secret Manager, VPC Access, network/subnetwork, KMS,
+the global/regional serverless HTTP(S) load-balancer chain, selected legacy
+GKE resources (persistent disks, Cloud Router/NAT, Backup for GKE plans, and
+Cloud Build triggers), and IAM bindings
+for projects, buckets, service accounts, Artifact Registry, and Cloud Run.
+One authoritative IAM binding or policy becomes one canonical entry per
+member and condition.
+
+The OpenTofu-only project scan also covers Firestore databases, Monitoring
+alert policies, project Logging buckets/sinks, Compute snapshots, firewall
+rules, instances/groups/templates, health checks, HTTP proxies, regional
+forwarding rules, routes, zonal NEGs, and Service Directory namespaces,
+services, and endpoints. Identities preserve location and hierarchy; alert
+policies use their API ID rather than their display name.
+Enabled APIs are read directly from the paginated Service Usage API and
+matched to `google_project_service` state by service name. Every enabled API
+is inventoried, including defaults; APIs absent from all supplied states are
+uncovered. An API disabled outside OpenTofu becomes an orphan declaration.
+Cloud Asset service metadata does not establish enablement coverage.
+Backup for GKE RestorePlans match `google_gke_backup_restore_plan`; Restore
+and VolumeRestore executions have explicit runtime-content diagnostics.
+Restored disks receive the separate `controller_managed` status only when
+an exact successful VolumeRestore disk handle references the same project
+and its live RestorePlan is covered by a supplied OpenTofu state. Reports
+include the target PVC, VolumeRestore and parent state; these entries remain
+visible in human output without `--show-covered`. Missing parent state,
+failed restores and PVC-like disk names cannot establish coverage. Explicit
+disk declarations retain their `covered_opentofu` status.
+
+This is an origin/parent-state check through GCP APIs, not a live Kubernetes
+PVC binding or reclaim-policy check. Removing a RestorePlan does not establish
+that its restored disks will be deleted. Validate PVC/PV lifecycle separately
+before teardown or moving a disk into static OpenTofu ownership. The inventory
+requires no Kubernetes access for this classification.
+Cloud NAT addresses are filtered only when the Compute API reports purpose
+`NAT_AUTO`. GKE private endpoint subnetworks are filtered only through an exact
+subnetwork reference in the cluster API, including the current control-plane
+endpoint configuration. `--include-system` keeps both resource kinds visible.
+Resource Manager projects, project billing associations and zonal Compute
+InstanceSettings are also matched. Project identities use `project_id` from
+state, independent of the provider's default project.
+
+Every Cloud Asset type returned by the project search is accounted for.
+Unknown infrastructure types produce `unsupported_live_resource` entries
+and fail `--strict`. Kubernetes objects, image/backup contents and cached service
+metadata have explicit `ignored` diagnostics with reasons. Default
+Logging resources, GKE node/controller resources and subnet-generated routes
+are filtered by default; `--include-system` includes them. Internet routes
+and manual snapshots remain visible. A successful scan only describes the
+Asset Inventory search snapshot: it does not guarantee that an API's child
+resources, configuration drift or types not exposed by that API are covered.
+
+Compute Project is read directly and split into individual metadata entries,
+default network tier and Cloud Armor tier. GKE secondary-range metadata is
+filtered by default. Output-only descriptor fields (including quota usage)
+are explicitly accounted for separately. Unknown project fields, usage export
+settings and Shared VPC host status still fail strict mode. Metadata values
+are not emitted in reports; this inventory checks identities, not value drift.
+Retail Catalog and Cloud Build GlobalTriggerSettings retain unsupported reasons
+based on the verified Google 8.2.0 schema.
+
+Managed `google_*` types outside that inventory are reported as
+`unsupported_controller_resource`. Regional NEGs support `SERVERLESS`;
+zonal NEGs have separate location-scoped identities. Use `--strict` in CI so unsupported types cannot become a
+silent coverage gap.
+
+The command requires `tofu` on `PATH` and GCP Application Default Credentials.
+It does not require the `gcloud` or `kubectl` executables.
 
 ## `get-resources`
 
