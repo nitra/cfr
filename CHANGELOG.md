@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Accept a full URL in `region` of regional OpenTofu resources (the provider
+  keeps the API self-link for e.g. `google_compute_region_network_endpoint_group`),
+  so an imported serverless NEG no longer reports as both `UNCOVERED` and
+  `ORPHAN_OPENTOFU`.
+
+### Fixed
+
 - Match live Secret Manager secrets with OpenTofu state by short secret ID.
   Cloud Asset may return `displayName` as `projects/<number>/secrets/<id>`,
   which previously left every imported secret both `UNCOVERED` and
