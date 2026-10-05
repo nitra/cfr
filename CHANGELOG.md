@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Match live Secret Manager secrets with OpenTofu state by short secret ID.
+  Cloud Asset may return `displayName` as `projects/<number>/secrets/<id>`,
+  which previously left every imported secret both `UNCOVERED` and
+  `ORPHAN_OPENTOFU`.
+
 ## [0.8.0] - 2026-10-03
 
 ### Added
