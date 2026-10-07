@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Count Unified Maintenance operation records as explicit runtime-content
+  diagnostics instead of unsupported infrastructure. Affected resources and
+  unknown maintenance asset types retain strict coverage checks.
+
 - Accept a full URL in `region` of regional OpenTofu resources (the provider
   keeps the API self-link for e.g. `google_compute_region_network_endpoint_group`),
   so an imported serverless NEG no longer reports as both `UNCOVERED` and

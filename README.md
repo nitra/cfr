@@ -238,6 +238,11 @@ uncovered. An API disabled outside OpenTofu becomes an orphan declaration.
 Cloud Asset service metadata does not establish enablement coverage.
 Backup for GKE RestorePlans match `google_gke_backup_restore_plan`; Restore
 and VolumeRestore executions have explicit runtime-content diagnostics.
+Unified Maintenance `ResourceMaintenance` operation records are also counted
+as runtime-content diagnostics, including with `--include-system`. They do
+not establish coverage of the affected infrastructure or its maintenance
+policy; unknown maintenance asset types still fail strict scans. See the
+[Google API resource definition](https://docs.cloud.google.com/unified-maintenance/docs/reference/rest/v1/projects.locations.resourceMaintenances).
 Restored disks receive the separate `controller_managed` status only when
 an exact successful VolumeRestore disk handle references the same project
 and its live RestorePlan is covered by a supplied OpenTofu state. Reports
