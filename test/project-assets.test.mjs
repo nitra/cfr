@@ -66,6 +66,37 @@ test('unknown live infrastructure fails strict mode; runtime objects have explic
   assert.equal(hasBlockingFindings([], [], diagnostics.filter((d) => d.type === 'asset-scope-skip')), false);
 });
 
+test('maintenance operations are counted without hiding affected infrastructure or unknown maintenance types', () => {
+  const operations = ['one', 'two'].map((id) => ({
+    assetType: 'maintenance.googleapis.com/ResourceMaintenance',
+    name: `//maintenance.googleapis.com/projects/demo/locations/eu/resourceMaintenances/${id}`,
+  }));
+  for (const includeSystem of [false, true]) {
+    const runtime = collectAdditionalProjectAssets(operations, { includeSystem });
+    assert.deepEqual(runtime.resources, []);
+    assert.equal(runtime.diagnostics.length, 1);
+    assert.equal(runtime.diagnostics[0].type, 'asset-scope-skip');
+    assert.equal(runtime.diagnostics[0].kind, 'RuntimeContent');
+    assert.equal(runtime.diagnostics[0].count, 2);
+    assert.match(runtime.diagnostics[0].reason, /maintenance operation status/);
+    assert.equal(hasBlockingFindings([], [], runtime.diagnostics), false);
+
+    const affected = collectAdditionalProjectAssets([...operations, {
+      assetType: 'compute.googleapis.com/Instance',
+      name: '//compute.googleapis.com/projects/demo/zones/eu-a/instances/user-vm',
+    }], { includeSystem });
+    const findings = classifyResources(affected.resources.map((r) => ({ ...r, project: 'demo' })), []);
+    assert.equal(findings[0].status, 'uncovered');
+    assert.equal(hasBlockingFindings(findings, [], affected.diagnostics), true);
+
+    const unknown = collectAdditionalProjectAssets([...operations, {
+      assetType: 'maintenance.googleapis.com/MaintenancePolicy', name: 'policy',
+    }], { includeSystem });
+    assert.equal(unknown.diagnostics.filter((d) => d.type === 'unsupported-live-resource').length, 1);
+    assert.equal(hasBlockingFindings([], [], unknown.diagnostics), true);
+  }
+});
+
 test('rejects incomplete identities instead of inventing a covered resource', () => {
   assert.throws(() => collectAdditionalProjectAssets([{ assetType: 'compute.googleapis.com/Snapshot' }]), /cannot normalize live/);
   assert.throws(() => normalizeTofuState({ values: { root_module: { resources: [{
