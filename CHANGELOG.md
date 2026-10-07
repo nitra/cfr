@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-10-07
+
 ### Fixed
 
 - Count Unified Maintenance operation records as explicit runtime-content
@@ -17,8 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   keeps the API self-link for e.g. `google_compute_region_network_endpoint_group`),
   so an imported serverless NEG no longer reports as both `UNCOVERED` and
   `ORPHAN_OPENTOFU`.
-
-### Fixed
 
 - Match live Secret Manager secrets with OpenTofu state by short secret ID.
   Cloud Asset may return `displayName` as `projects/<number>/secrets/<id>`,
