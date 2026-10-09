@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `check` reads `resources:` with a real YAML parser instead of a line scan.
+  A full-line comment between list items, an unindented `- item` list or a
+  flow-style `[a, b]` list no longer ends the list early and reports listed
+  files as missing from `resources:`. Invalid YAML now fails with an explicit
+  `invalid YAML` error.
+
 ## [0.8.1] - 2026-10-07
 
 ### Fixed
