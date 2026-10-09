@@ -44,6 +44,30 @@ test('exits 1 and names the dangling resources: entry', () => {
   assert.match(stderr, /missing on disk/);
 });
 
+test('a full-line comment between resources: items does not end the list', () => {
+  const { code, stdout } = run('comments');
+  assert.equal(code, 0);
+  assert.match(stdout, /^✓ /);
+});
+
+test('resources: items without indentation are still read', () => {
+  const { code, stdout } = run('unindented');
+  assert.equal(code, 0);
+  assert.match(stdout, /^✓ /);
+});
+
+test('flow-style resources: [ ... ] is read', () => {
+  const { code, stdout } = run('flow');
+  assert.equal(code, 0);
+  assert.match(stdout, /^✓ /);
+});
+
+test('exits 1 with a parse error instead of guessing on invalid YAML', () => {
+  const { code, stderr } = run('invalid-yaml');
+  assert.equal(code, 1);
+  assert.match(stderr, /invalid YAML/);
+});
+
 test('exits 1 with a clear error when kustomization.yaml is absent', () => {
   const { code, stderr } = run('..');
   assert.equal(code, 1);
