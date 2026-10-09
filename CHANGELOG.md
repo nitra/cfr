@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.2] - 2026-10-09
+
 ### Fixed
 
 - `check` reads `resources:` with a real YAML parser instead of a line scan.
@@ -274,7 +276,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   directory is listed in `kustomization.yaml`'s explicit `resources:`
   (and vice versa) — catches files Flux silently ignores.
 
-[Unreleased]: https://github.com/nitra/cfr/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/nitra/cfr/compare/v0.8.2...HEAD
+[0.8.2]: https://github.com/nitra/cfr/compare/v0.8.1...v0.8.2
+[0.8.1]: https://github.com/nitra/cfr/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/nitra/cfr/compare/v0.7.3...v0.8.0
 [0.6.1]: https://github.com/nitra/cfr/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/nitra/cfr/compare/v0.5.0...v0.6.0
