@@ -33,6 +33,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   state and GCP APIs only, with controller-generated resources distinguished
   from direct OpenTofu ownership and unsupported types failing strict mode.
 
+### Fixed
+
+- Classify Artifact Registry DockerImage assets as CI-produced contents with
+  explicit diagnostics, not unsupported infrastructure. Repository/IAM ownership
+  and retention/provenance remain separate mandatory checks; unknown types fail.
+
 ## [0.8.2] - 2026-10-09
 
 ### Fixed
