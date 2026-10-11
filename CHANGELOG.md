@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-11
+
+### Breaking
+
+- OpenTofu + Flux only: remove `kcc-inventory`, Kubernetes REST transport,
+  namespace/project autodiscovery and KCC coverage. No kubeconfig required.
+- `get-resources` requires `--project PROJECT`; namespace positional arguments
+  and `--all` are removed. JSON is `{project, resources, diagnostics}`.
+- Inventory flags are validated strictly. Unsupported options and missing values
+  fail with exit code 2 instead of being silently ignored.
+
+### Added
+
+- `contract [--json] FILE ...` / `contract --json -`: static validation of
+  concrete rendered Flux bundles (sources, health, ownership, pins, Helm
+  identities, dependencies, no plaintext Secret payloads or cloud-controller
+  installation). Not a replacement for CRD schemas, saved-plan approval,
+  cloud coverage or runtime/data acceptance.
+- `--version`; release actions pinned by SHA, publish npm pinned to 11.6.2.
+
+### Preserved
+
+- `check` and its directory shorthand; `tofu-inventory` reads actual OpenTofu
+  state and GCP APIs only, with controller-generated resources distinguished
+  from direct OpenTofu ownership and unsupported types failing strict mode.
+
+### Fixed
+
+- Classify Artifact Registry DockerImage assets as CI-produced contents with
+  explicit diagnostics, not unsupported infrastructure. Repository/IAM ownership
+  and retention/provenance remain separate mandatory checks; unknown types fail.
+
 ## [0.8.2] - 2026-10-09
 
 ### Fixed

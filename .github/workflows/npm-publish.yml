@@ -21,7 +21,7 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
       # npm Trusted Publishing requires npm >= 11.5.1 and Node >= 22.14.0.
       # setup-node MUST be v6+: v4/v5 always write
@@ -30,16 +30,26 @@ jobs:
       # configured and skip the OIDC exchange entirely (404 on publish) — see
       # https://github.com/actions/setup-node/issues/1551. v6 handles OIDC
       # correctly and needs no NODE_AUTH_TOKEN at all.
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
 
-      - run: npm install -g npm@latest
+      - run: npm install -g npm@11.6.2
 
       - run: npm ci
 
       - run: npm test
+
+      - name: Verify published runtime has no legacy discovery
+        run: |
+          npm pack --dry-run --json | node --input-type=module -e '
+            let input = "";
+            for await (const chunk of process.stdin) input += chunk;
+            const files = JSON.parse(input)[0].files.map(({path}) => path);
+            if (files.some(path => /kcc-inventory|k8s-rest/.test(path))) process.exit(1);
+            if (!files.includes("lib/contract.mjs")) process.exit(1);
+          '
 
       - name: Verify tag matches package.json version
         run: |

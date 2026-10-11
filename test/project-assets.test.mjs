@@ -4,6 +4,21 @@ import { collectAdditionalProjectAssets, collectComputeProjectSettings, enabledS
 import { normalizeTofuState, classifyResources } from '../lib/controller-inventory.mjs';
 import { hasBlockingFindings } from '../lib/tofu-inventory.mjs';
 
+test('Artifact Registry images are CI contents, never repository coverage', () => {
+  for (const includeSystem of [false, true]) {
+    const result = collectAdditionalProjectAssets([
+      { assetType: 'artifactregistry.googleapis.com/DockerImage', name: 'image@sha256:fixture' },
+      { assetType: 'artifactregistry.googleapis.com/Repository', name: 'repository' },
+      { assetType: 'artifactregistry.googleapis.com/UnknownInfrastructure', name: 'unknown' },
+    ], { includeSystem });
+    assert.equal(result.resources.length, 0);
+    assert.equal(result.diagnostics.find((d) => d.assetType.endsWith('/DockerImage')).kind, 'RuntimeContent');
+    assert.equal(result.diagnostics.find((d) => d.assetType.endsWith('/UnknownInfrastructure')).type, 'unsupported-live-resource');
+    assert.equal(hasBlockingFindings([], [], result.diagnostics), true);
+    assert.equal(hasBlockingFindings([{ status: 'uncovered', kind: 'ArtifactRegistryRepository' }], [], []), true);
+  }
+});
+
 test('matches project-number live assets with imported Firestore, Monitoring, Logging and snapshot state', () => {
   const fixtures = [
     ['firestore.googleapis.com/Database', 'projects/123/databases/(default)', 'google_firestore_database', { name: '(default)' }],

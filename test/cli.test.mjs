@@ -8,6 +8,16 @@ const here = dirname(fileURLToPath(import.meta.url));
 const cli = join(here, '..', 'bin', 'cli.mjs');
 const fixtures = join(here, 'fixtures');
 
+test('v1 version and strict command arguments', () => {
+  assert.equal(runArgs('--version').stdout.trim(), '1.0.0');
+  for (const args of [['get-resources', 'azovmemo'], ['get-resources', '--project'],
+    ['get-resources', '--all'], ['tofu-inventory', '--project', 'azovmemo'],
+    ['tofu-inventory', '--project', 'azovmemo', '--tofu', 'root', '--ownership', 'old.json']]) {
+    const result = runArgs(...args);
+    assert.equal(result.code, 2, result.stderr);
+  }
+});
+
 function runArgs(...args) {
   try {
     const stdout = execFileSync('node', [cli, ...args], {
@@ -84,27 +94,28 @@ test('top-level --help lists all inventory commands', () => {
   const { code, stdout } = runArgs('--help');
   assert.equal(code, 0);
   assert.match(stdout, /check/);
-  assert.match(stdout, /kcc-inventory/);
+  assert.doesNotMatch(stdout, /kcc-inventory/);
+  assert.match(stdout, /contract/);
   assert.match(stdout, /get-resources/);
   assert.match(stdout, /tofu-inventory/);
 });
 
-test('"kcc-inventory --help" shows its own usage without touching gcloud/kubectl', () => {
-  const { code, stdout } = runArgs('kcc-inventory', '--help');
-  assert.equal(code, 0);
-  assert.match(stdout, /kcc-inventory <namespace>/);
+test('removed inventory command fails without touching cloud or Kubernetes', () => {
+  const { code, stderr } = runArgs('kcc-inventory', '--help');
+  assert.equal(code, 2);
+  assert.match(stderr, /removed in v1/);
 });
 
 test('"kcc-inventory" with no target exits 2 with a usage error', () => {
   const { code, stderr } = runArgs('kcc-inventory');
   assert.equal(code, 2);
-  assert.match(stderr, /usage:/);
+  assert.match(stderr, /removed in v1/);
 });
 
 test('"get-resources --help" shows its own usage without touching gcloud/kubectl', () => {
   const { code, stdout } = runArgs('get-resources', '--help');
   assert.equal(code, 0);
-  assert.match(stdout, /get-resources <namespace>/);
+  assert.match(stdout, /get-resources --project PROJECT/);
 });
 
 test('"get-resources" with no target exits 2 with a usage error', () => {

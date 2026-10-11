@@ -13,7 +13,11 @@ const pool = {
   id: 'global/forgejo-pool',
 };
 
-test('merges KCC, OpenTofu, and ownership and leaves only the remainder uncovered', () => {
+test('rejects unsupported declaration owners', () => {
+  assert.throws(() => classifyResources([pool], [{ ...pool, controller: 'kcc', source: 'old' }]), /Unsupported.*owner/i);
+});
+
+test('merges OpenTofu and ownership and leaves only the remainder uncovered', () => {
   const live = [
     pool,
     { project: 'nitraai', kind: 'StorageBucket', id: 'state' },
@@ -57,7 +61,7 @@ test('keeps IAM bindings with distinct conditions as separate resources', () => 
   assert.ok(results.every((resource) => resource.status === 'uncovered'));
 });
 
-test('normalizes condition whitespace when matching KCC and live IAM bindings', () => {
+test('normalizes condition whitespace when matching OpenTofu and live IAM bindings', () => {
   const base = {
     project: 'nitraai',
     kind: 'IAMPolicyMember',
@@ -67,20 +71,20 @@ test('normalizes condition whitespace when matching KCC and live IAM bindings', 
     [{ ...base, condition: { title: 'scoped', expression: 'resource.name == provider' } }],
     [{
       ...base,
-      controller: 'kcc',
+      controller: 'opentofu',
       source: 'nitraai',
       condition: { title: ' scoped ', expression: 'resource.name   ==   provider' },
     }],
   );
 
-  assert.equal(result.status, 'covered_kcc');
+  assert.equal(result.status, 'covered_opentofu');
 });
 
 test('rejects overlapping declarations instead of choosing a controller by precedence', () => {
   assert.throws(() => classifyResources([pool], [
-    { ...pool, controller: 'kcc', source: 'nitraai' },
+    { ...pool, controller: 'opentofu', source: 'another-root' },
     { ...pool, controller: 'opentofu', source: 'tofu' },
-  ]), /controller conflict.*kcc and opentofu/);
+  ]), /controller conflict.*opentofu and opentofu/);
 });
 
 test('normalizes root and child OpenTofu modules and diagnoses unsupported resources', () => {
