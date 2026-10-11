@@ -2,13 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   canonicalPubSubId,
-  kccBucketId,
   liveIamPolicyIds,
   liveIamPolicyResources,
   replaceBucketIamPolicies,
 } from '../lib/get-resources.mjs';
 
-test('canonicalizes short KCC Pub/Sub IDs to Cloud Asset full paths', () => {
+test('canonicalizes short Pub/Sub IDs to Cloud Asset full paths', () => {
   assert.equal(
     canonicalPubSubId('download-record', 'abie-ua', 'topics'),
     'projects/abie-ua/topics/download-record',
@@ -16,15 +15,6 @@ test('canonicalizes short KCC Pub/Sub IDs to Cloud Asset full paths', () => {
   assert.equal(
     canonicalPubSubId('projects/abie-ua/topics/download-record', 'abie-ua', 'topics'),
     'projects/abie-ua/topics/download-record',
-  );
-});
-
-test('resolves KCC bucket references through the bucket resourceID', () => {
-  const refs = new Map([['dev-nessie-warehouse', 'dev-nessie-warehouse-abie-ua']]);
-
-  assert.equal(
-    kccBucketId({ name: 'dev-nessie-warehouse' }, refs),
-    'dev-nessie-warehouse-abie-ua',
   );
 });
 
