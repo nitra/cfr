@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `ignored` status now covers system-managed and data resources with an explicit
+  `reason`: SecretVersion, PVC disks, empty InstanceSettings, Container Analysis
+  topics, `gke-*` firewalls (incl. ipv6), GKE Cloud DNS response policies/rules,
+  Dataplex `@` entry groups and predefined IAM roles. Custom roles and all other
+  infrastructure stay visible. `--include-system` disables the rules.
+- `tofu-inventory --ignore KIND_OR_ASSET_TYPE:ID_REGEX` for explicit exceptions.
+- `google_secret_manager_secret_iam_{member,binding,policy}` mapping.
+
+### Fixed
+
+- Secret-level IAM bindings are matched when Cloud Asset uses the project number
+  and OpenTofu state the project ID.
+
 ## [1.0.0] - 2026-10-11
 
 ### Breaking
