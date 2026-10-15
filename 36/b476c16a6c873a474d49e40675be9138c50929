@@ -1,0 +1,43 @@
+CHANGELOG.md
+  s_3f470405aeb820::t_4642ce2e42294e 10-24
+README.md
+  s_3f470405aeb820::t_0bf68ffea9dded 127-160
+lib/controller-inventory.mjs
+  s_8bdc6ee334775b::t_3fb9ef3b3ccc3d 151-158,375-383
+lib/get-resources.mjs
+  s_8bdc6ee334775b::t_6e38a3325f069c 5,287-295,306-307,321,324,339-340,534-538,587-592,620-623,625-626,701
+lib/ignore-rules.mjs
+  s_8bdc6ee334775b::t_fe4ea59ba54d4d 1-100
+lib/project-assets.mjs
+  s_8bdc6ee334775b::t_5dfff52c8b87dc 1,96-98,165,171,181-189,192-198,244-248
+lib/tofu-inventory.mjs
+  s_8bdc6ee334775b::t_243f73e64e3669 6,16-20,32-36,49-51,71,99-105,118,155-156,169,173,178,187,190-191,205-206
+test/ignore-rules.test.mjs
+  s_8bdc6ee334775b::t_d92bc1813745e7 1-118
+test/secret-iam-identity.test.mjs
+  s_8bdc6ee334775b::t_f7ab0b34d1ccba 1-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "36b476c16a6c873a474d49e40675be9138c50929",
+  "prompts": {},
+  "sessions": {
+    "s_3f470405aeb820": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d492ed1d-dbf6-4f56-a69e-8dcf6c2465ec",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "vitaliytv <v@nitra.ai>"
+    },
+    "s_8bdc6ee334775b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e5751158-1c95-4c36-bf8e-f412462b2419",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "vitaliytv <v@nitra.ai>"
+    }
+  }
+}
