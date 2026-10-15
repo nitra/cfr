@@ -1,6 +1,6 @@
 {
   "name": "@nitra/cfr",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "OpenTofu + Flux utilities: validate rendered GitOps contracts and reconcile live GCP coverage through OpenTofu state.",
   "keywords": [
     "kustomize",
