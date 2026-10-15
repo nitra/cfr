@@ -1,4 +1,5 @@
 import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
@@ -7,9 +8,10 @@ import assert from 'node:assert/strict';
 const here = dirname(fileURLToPath(import.meta.url));
 const cli = join(here, '..', 'bin', 'cli.mjs');
 const fixtures = join(here, 'fixtures');
+const pkgVersion = JSON.parse(readFileSync(join(here, '..', 'package.json'), 'utf8')).version;
 
 test('v1 version and strict command arguments', () => {
-  assert.equal(runArgs('--version').stdout.trim(), '1.0.0');
+  assert.equal(runArgs('--version').stdout.trim(), pkgVersion);
   for (const args of [['get-resources', 'azovmemo'], ['get-resources', '--project'],
     ['get-resources', '--all'], ['tofu-inventory', '--project', 'azovmemo'],
     ['tofu-inventory', '--project', 'azovmemo', '--tofu', 'root', '--ownership', 'old.json']]) {
