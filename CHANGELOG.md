@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   infrastructure stay visible. `--include-system` disables the rules.
 - `tofu-inventory --ignore KIND_OR_ASSET_TYPE:ID_REGEX` for explicit exceptions.
 - `google_secret_manager_secret_iam_{member,binding,policy}` mapping.
+- `cfr portability --project PROJECT [--dir DIR ...] [--tofu DIR ...] [--json] [--strict]`:
+  read-only pre-flight for moving to another GCP project (hardcoded project ID/number,
+  globally unique names, data outside IaC with counters, coverage gaps, steps outside
+  Git, external trust, static IPs). `tofu-inventory`/`get-resources` behaviour unchanged.
 
 ### Fixed
 

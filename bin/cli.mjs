@@ -3,6 +3,7 @@ import { run as runCheck } from '../lib/check.mjs';
 import { run as runGetResources } from '../lib/gcp-inventory-cli.mjs';
 import { run as runTofuInventory } from '../lib/tofu-inventory.mjs';
 import { run as runContract } from '../lib/contract.mjs';
+import { run as runPortability } from '../lib/portability.mjs';
 import { readFileSync } from 'node:fs';
 
 const TOP_HELP = `cfr (@nitra/cfr) — OpenTofu + Flux contract utilities
@@ -17,6 +18,7 @@ Commands:
   get-resources   Read-only live GCP inventory (--project PROJECT)
   tofu-inventory  Compare live GCP with actual OpenTofu state
   contract        Validate rendered Kubernetes/Flux manifests (no cloud owner CRs)
+  portability     Read-only pre-flight: what blocks moving to another GCP project
 
 Run "npx @nitra/cfr <command> --help" for command-specific help.
 `;
@@ -26,6 +28,7 @@ const COMMANDS = {
   'get-resources': runGetResources,
   'tofu-inventory': runTofuInventory,
   contract: runContract,
+  portability: runPortability,
 };
 
 // check is synchronous (local filesystem only); inventory commands are async

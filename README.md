@@ -162,6 +162,37 @@ compare `gcloud asset search-all-iam-policies` with `get-iam-policy` and re-run.
 During migration, separately prove KCC abandon/recreate-path removal before
 enabling OpenTofu writes. No automatic ownership transfer is implemented here.
 
+## portability
+
+OpenTofu coverage is not readiness to move the workload to another Google Cloud
+project. `cfr portability` shows ahead of time what will hinder a move. It is
+read-only and reads only metadata and counters (never secret payloads, objects
+or image contents).
+
+```sh
+npx @nitra/cfr portability --project PROJECT --dir tofu --dir flux [--tofu tofu/root] [--json] [--strict]
+```
+
+`--dir` is repeatable (default `.`); `*.md` (for literal checks), `docs/`,
+`.terraform/`, `node_modules/` and `.git/` are skipped. The project number comes
+from Cloud Asset. Findings carry `severity` (error|warn|info), `check`,
+`location` (file:line or `live:...`), `message`, `hint`. `--json` emits
+`{findings, summary}`; exit is 0, or 1 with `--strict` when any error exists.
+
+| Check | Severity | What |
+|---|---|---|
+| `hardcoded-project-id` | error | literal project ID, grouped by context (bucket/resource name, `pkg.dev/PROJECT/`, SA email, `PROJECT.svc.id.goog`, `projects/PROJECT`, bare ID) |
+| `hardcoded-project-number` | error | literal project number |
+| `globally-unique-names` | warn | bucket names without a variable part; literal `dns_name` (the Artifact Registry host is project-scoped by path, so it is reported by the ID check) |
+| `data-not-in-iac` | info | live counters + migration advice: SecretVersion per secret, buckets, Artifact Registry DOCKER images, PVC disks, snapshots, user-managed SA keys, Cloud SQL / BigQuery / Pub/Sub subscriptions / Firestore / Spanner / Redis when present |
+| `uncovered-or-unsupported` | warn | needs `--tofu`: uncovered, orphan and unsupported resources (not `ignored`) grouped by type |
+| `out-of-git-steps` | warn | heuristic: `kubectl create secret`, `kubectl apply -k`, `helm install`, `gcloud` (.sh/.yaml), manual/bootstrap wording in comments, scripts and README |
+| `external-trust` | info | live WIF providers' issuer/audiences and static `issuer_uri` in `.tf` |
+| `static-ips-and-dns` | info | external static addresses (IPs change, DNS needs updating) |
+
+The human report ends with `blockers (error): N; warnings: N; data to migrate: ...`.
+Heuristics can have false positives; messages never echo source lines.
+
 ## Upgrade from 0.x
 
 - Remove `kcc-inventory` jobs. The removed command returns exit 2 with guidance.
