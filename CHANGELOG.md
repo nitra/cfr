@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `ignored` also covers `Project`, `ProjectBillingInfo`, compute default network/Cloud Armor
+  tiers, the default GKE Security Bulletin alert policy (exact name + log signature) and the
+  default internet route of the default network. Soft-deleted custom roles are no longer live.
+- State <-> live mapping for `google_compute_{,region_}security_policy`,
+  `google_monitoring_notification_channel`, `google_certificate_manager_{certificate,dns_authorization}`
+  and `google_project_iam_custom_role` (project custom roles).
+- Orphan IAM members are verified with read-only `getIamPolicy` (max 25 reads, cached per
+  target); found ones become `covered_opentofu` with `verified_via=getIamPolicy`.
+  `--no-verify-iam` disables it.
+
+### Added
+
 - `ignored` status now covers system-managed and data resources with an explicit
   `reason`: SecretVersion, PVC disks, empty InstanceSettings, Container Analysis
   topics, `gke-*` firewalls (incl. ipv6), GKE Cloud DNS response policies/rules,

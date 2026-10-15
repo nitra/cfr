@@ -142,6 +142,11 @@ turns all built-in rules off. Rules and rationale live in `lib/ignore-rules.mjs`
 | Firewalls `gke-<cluster>-<8hex>-[ipv6-]{all,vms,inkubelet,exkubelet,master}` | created by GKE |
 | DNS response policies/rules named `gke-*` (policy: name or all rules `gke-*`) | created by GKE Cloud DNS |
 | Dataplex entry groups `@<service>` | Google system groups |
+| `Project`, `ProjectBillingInfo` | bootstrap/organisation level, not project-scoped IaC |
+| Compute project default network tier, Cloud Armor tier | project-wide defaults on every project |
+| Alert policy "GKE Security Bulletin Affecting Your Cluster" | created by GKE; matched by exact name AND the `container.googleapis.com/notifications` / `SecurityBulletinEvent` log filter (the policy has no creator label; other alerts stay visible) |
+| Route `default-route-<hex>`: network `default`, `0.0.0.0/0`, next hop `default-internet-gateway` | default internet route; any other shape stays visible |
+| Soft-deleted custom roles (absent from IAM `roles.list`) | Cloud Asset still returns deleted roles; shown as one aggregated `ignored` entry |
 | Predefined `iam.googleapis.com/Role` (`//iam.googleapis.com/roles/*`) | Google-managed; **custom roles stay unsupported/visible** |
 
 Never ignored: service accounts and keys, IAM members/policies, buckets, secrets,
@@ -151,12 +156,22 @@ user networking. For project-specific exceptions use the explicit, repeatable
 `--ignore KIND_OR_ASSET_TYPE:ID_REGEX` (only uncovered / unsupported-live
 findings; the reason shows `user --ignore ...`).
 
+Also mapped (state <-> live): `google_compute_security_policy` /
+`google_compute_region_security_policy`, `google_monitoring_notification_channel`,
+`google_certificate_manager_certificate`, `google_certificate_manager_dns_authorization`,
+`google_project_iam_custom_role` (project custom roles only; organisation roles stay
+unsupported). Unowned ones are reported as `uncovered`, never silently hidden.
+
+Orphan IAM members are re-checked before being reported: Cloud Asset's IAM search is
+eventually consistent, so for each orphan candidate cfr reads the owner's policy
+(project / service account / bucket / secret) with a read-only `getIamPolicy` (one read per
+target, at most 25). If the binding exists it is `covered_opentofu` with
+`verified_via: getIamPolicy`; on a denied/failed read it stays orphan and a warning is
+printed to stderr. `--no-verify-iam` disables this.
+
 Secret-level IAM (`google_secret_manager_secret_{iam_member,iam_binding,iam_policy}`)
 is mapped; Cloud Asset reports it by project number, cfr normalises that to the
-project ID taken from the scanned assets. A persistent `orphan_opentofu` IAM
-binding that exists in GCP usually means the Cloud Asset IAM search index lags
-behind the real policy (it is eventually consistent), not an ID mismatch:
-compare `gcloud asset search-all-iam-policies` with `get-iam-policy` and re-run.
+project ID taken from the scanned assets. A stale orphan caused by Cloud Asset index lag is resolved by the getIamPolicy check above.
 
 `covered_opentofu` does not establish absence of a second external reconciler.
 During migration, separately prove KCC abandon/recreate-path removal before

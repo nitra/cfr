@@ -17,15 +17,15 @@ test('SecretVersion is ignored as data, not infrastructure', () => {
   assert.deepEqual(unsupported(diagnostics), []);
 });
 
-test('only predefined IAM roles are ignored; custom roles stay unsupported', () => {
-  const { diagnostics } = collectAdditionalProjectAssets([
+test('only predefined IAM roles are ignored; project custom roles are mapped, org roles stay unsupported', () => {
+  const { diagnostics, resources } = collectAdditionalProjectAssets([
     { assetType: 'iam.googleapis.com/Role', name: '//iam.googleapis.com/roles/viewer' },
     { assetType: 'iam.googleapis.com/Role', name: '//iam.googleapis.com/projects/p/roles/customRole' },
     { assetType: 'iam.googleapis.com/Role', name: '//iam.googleapis.com/organizations/1/roles/orgRole' },
   ]);
   assert.equal(skipped(diagnostics, 'iam.googleapis.com/Role').count, 1);
-  assert.deepEqual(unsupported(diagnostics), [
-    '//iam.googleapis.com/projects/p/roles/customRole', '//iam.googleapis.com/organizations/1/roles/orgRole']);
+  assert.deepEqual(resources.map((r) => [r.kind, r.id]), [['IAMRole', 'customRole']]);
+  assert.deepEqual(unsupported(diagnostics), ['//iam.googleapis.com/organizations/1/roles/orgRole']);
 });
 
 test('only Dataplex @system entry groups are ignored', () => {
