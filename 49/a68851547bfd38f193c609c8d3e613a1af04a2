@@ -1,0 +1,23 @@
+CHANGELOG.md
+  s_8bdc6ee334775b::t_16a4a73e3438ce 10,19-21,23-29
+package-lock.json
+  s_8bdc6ee334775b::t_4d1f042fa08d3a 3,9
+package.json
+  s_8bdc6ee334775b::t_1e9739842b1927 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "49a68851547bfd38f193c609c8d3e613a1af04a2",
+  "prompts": {},
+  "sessions": {
+    "s_8bdc6ee334775b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e5751158-1c95-4c36-bf8e-f412462b2419",
+        "model": "unknown"
+      },
+      "human_author": "vitaliytv <v@nitra.ai>"
+    }
+  }
+}
