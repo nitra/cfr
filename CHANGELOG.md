@@ -7,17 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-
-- `ignored` also covers `Project`, `ProjectBillingInfo`, compute default network/Cloud Armor
-  tiers, the default GKE Security Bulletin alert policy (exact name + log signature) and the
-  default internet route of the default network. Soft-deleted custom roles are no longer live.
-- State <-> live mapping for `google_compute_{,region_}security_policy`,
-  `google_monitoring_notification_channel`, `google_certificate_manager_{certificate,dns_authorization}`
-  and `google_project_iam_custom_role` (project custom roles).
-- Orphan IAM members are verified with read-only `getIamPolicy` (max 25 reads, cached per
-  target); found ones become `covered_opentofu` with `verified_via=getIamPolicy`.
-  `--no-verify-iam` disables it.
+## [1.1.0] - 2026-10-15
 
 ### Added
 
@@ -26,8 +16,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   topics, `gke-*` firewalls (incl. ipv6), GKE Cloud DNS response policies/rules,
   Dataplex `@` entry groups and predefined IAM roles. Custom roles and all other
   infrastructure stay visible. `--include-system` disables the rules.
+- `ignored` also covers `Project`, `ProjectBillingInfo`, compute default network/Cloud Armor
+  tiers, the default GKE Security Bulletin alert policy (exact name + log signature) and the
+  default internet route of the default network. Soft-deleted custom roles are no longer live.
 - `tofu-inventory --ignore KIND_OR_ASSET_TYPE:ID_REGEX` for explicit exceptions.
-- `google_secret_manager_secret_iam_{member,binding,policy}` mapping.
+- State <-> live mapping for `google_secret_manager_secret_iam_{member,binding,policy}`,
+  `google_compute_{,region_}security_policy`, `google_monitoring_notification_channel`,
+  `google_certificate_manager_{certificate,dns_authorization}` and
+  `google_project_iam_custom_role` (project custom roles).
+- Orphan IAM members are verified with read-only `getIamPolicy` (max 25 reads, cached per
+  target); found ones become `covered_opentofu` with `verified_via=getIamPolicy`.
+  `--no-verify-iam` disables it.
 - `cfr portability --project PROJECT [--dir DIR ...] [--tofu DIR ...] [--json] [--strict]`:
   read-only pre-flight for moving to another GCP project (hardcoded project ID/number,
   globally unique names, data outside IaC with counters, coverage gaps, steps outside
