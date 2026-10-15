@@ -1,0 +1,19 @@
+test/cli.test.mjs
+  s_8bdc6ee334775b::t_a3608bc069b15b 2,11,14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3411effcf1ad751666d7edb7ccc7a5ce02a48424",
+  "prompts": {},
+  "sessions": {
+    "s_8bdc6ee334775b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e5751158-1c95-4c36-bf8e-f412462b2419",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "vitaliytv <v@nitra.ai>"
+    }
+  }
+}
